@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="thhS0hYgvoIPNvsR-N5nnRtSe8buW6GO_NbT3eP5BRo" />
+    
+    <title>ConnectHub</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1877f2">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">ConnectHub</div>
+
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Discover</a>
+            <a href="#">Communities</a>
+            <a href="#">About</a>
+        </nav>
+
+        <div class="nav-buttons">
+            <a href="login.html" class="login-btn">Login</a>
+<a href="signup.html" class="signup-btn">Create Account</a>
+        </div>
+    </header>
+
+    <main class="hero">
+
+        <section class="hero-content">
+            <h1>Connect with people<br>who share your <span>interests.</span></h1>
+
+            <p>
+                Discover new people, make friends, join communities
+                and share what you love.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="primary-btn">Get Started</button>
+                <button class="secondary-btn">Explore Communities</button>
+            </div>
+        </section>
+
+        <section class="hero-card">
+            <div class="card-top">
+                <div class="avatar">👤</div>
+                <div>
+                    <h3>Find Your Circle</h3>
+                    <p>People with similar interests</p>
+                </div>
+            </div>
+
+            <div class="interests">
+                <span>🎮 Gaming</span>
+                <span>💻 Coding</span>
+                <span>🎵 Music</span>
+                <span>⚽ Sports</span>
+                <span>🎬 Movies</span>
+                <span>📚 Study</span>
+            </div>
+
+            <button class="connect-btn">Discover People</button>
+        </section>
+
+    </main>
+
+    <section class="features">
+
+        <div class="feature">
+            <div class="feature-icon">🤝</div>
+            <h3>Make Connections</h3>
+            <p>Meet people who share your interests.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">👥</div>
+            <h3>Join Communities</h3>
+            <p>Find communities based on your hobbies.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">🛡️</div>
+            <h3>Stay Safe</h3>
+            <p>Privacy and reporting tools built in.</p>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>© 2026 ConnectHub. Connect. Share. Belong.</p>
+    </footer>
+<script>
+    console.log("INDEX SCRIPT TEST");
+    
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+
+     src="script.js"
+
+    
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js")
+            .then(() => {
+                console.log("ConnectHub Service Worker registered ✅");
+            })
+            .catch(error => {
+                console.error("Service Worker error:", error);
+            });
+    });
+}
+</script>
+
+</body>
+</html>
