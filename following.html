@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Following - ConnectHub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f8fc;
+    color: #1f2937;
+}
+
+.navbar {
+    min-height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+}
+
+.logo {
+    color: #5b5cf0;
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.nav-links a:hover {
+    color: #5b5cf0;
+}
+
+.container {
+    max-width: 750px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.back {
+    border: none;
+    background: #eeeeff;
+    color: #5b5cf0;
+    padding: 10px 15px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.title {
+    font-size: 26px;
+}
+
+.user-card {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eeeeff;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.user-bio {
+    color: #777;
+    font-size: 13px;
+}
+
+.view-btn {
+    border: none;
+    background: #5b5cf0;
+    color: white;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.empty,
+.loading {
+    background: white;
+    padding: 50px 20px;
+    text-align: center;
+    border-radius: 15px;
+    color: #777;
+}
+
+@media(max-width:700px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .nav-links {
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .user-card {
+        padding: 14px;
+    }
+
+    .avatar {
+        width: 50px;
+        height: 50px;
+    }
+
+    .view-btn {
+        padding: 8px 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="home.html" class="logo">
+        ConnectHub
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="home.html">🏠 Home</a>
+        <a href="discover.html">🔍 Discover</a>
+        <a href="messages.html">💬 Messages</a>
+        <a href="notifications.html">🔔 Notifications</a>
+        <a href="profile.html">👤 Profile</a>
+        <a href="settings.html">⚙️ Settings</a>
+
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+    <div class="header">
+
+        <button
+            class="back"
+            onclick="history.back()"
+        >
+            ← Back
+        </button>
+
+        <h1 class="title">
+            Following
+        </h1>
+
+    </div>
+
+
+    <div id="usersArea">
+
+        <div class="loading">
+            Loading following...
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+const currentUserId =
+    localStorage.getItem("userId");
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const profileUserId =
+    params.get("userId") ||
+    currentUserId;
+
+
+if (!currentUserId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   LOAD FOLLOWING
+========================================= */
+
+async function loadFollowing() {
+
+    const area =
+        document.getElementById(
+            "usersArea"
+        );
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/users/${encodeURIComponent(
+                    profileUserId
+                )}/following`
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            area.innerHTML = `
+                <div class="empty">
+                    ❌ Unable to load following.
+                </div>
+            `;
+
+            return;
+        }
+
+        renderUsers(
+            data.users || []
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Following error:",
+            error
+        );
+
+        area.innerHTML = `
+            <div class="empty">
+                ❌ Server connection failed.
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================
+   RENDER USERS
+========================================= */
+
+function renderUsers(users) {
+
+    const area =
+        document.getElementById(
+            "usersArea"
+        );
+
+    if (!users.length) {
+
+        area.innerHTML = `
+            <div class="empty">
+                👤
+                <br><br>
+                Not following anyone yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    area.innerHTML =
+        users.map(
+            user => `
+
+                <div class="user-card">
+
+                    <img
+                        class="avatar"
+                        src="${
+                            escapeAttribute(
+                                user.profilePhoto ||
+                                "https://via.placeholder.com/100"
+                            )
+                        }"
+                        onerror="
+                            this.src='https://via.placeholder.com/100'
+                        "
+                        alt="Profile"
+                    >
+
+                    <div class="user-info">
+
+                        <div class="user-name">
+                            ${escapeHtml(
+                                user.name ||
+                                "Unknown User"
+                            )}
+                        </div>
+
+                        <div class="user-bio">
+                            ${escapeHtml(
+                                user.bio ||
+                                "No bio yet."
+                            )}
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="view-btn"
+                        onclick="
+                            openProfile(
+                                ${Number(user.id)}
+                            )
+                        "
+                    >
+                        View
+                    </button>
+
+                </div>
+
+            `
+        ).join("");
+}
+
+
+/* =========================================
+   OPEN PROFILE
+========================================= */
+
+function openProfile(userId) {
+
+    window.location.href =
+        `profile.html?userId=${encodeURIComponent(
+            userId
+        )}`;
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        function(character) {
+
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[character];
+
+        }
+    );
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(value);
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+loadFollowing();
+
+</script>
+
+</body>
+</html>

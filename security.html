@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security - ConnectHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">ConnectHub</div>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="messages.html">Messages</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="settings.html">⚙️ Settings</a>
+    </nav>
+
+    <div class="nav-buttons">
+        <a href="profile.html">
+            <button class="signup-btn">My Profile</button>
+        </a>
+    </div>
+
+</header>
+
+
+<main class="settings-container">
+
+    <section class="settings-card">
+
+        <a href="settings.html" class="back-link">
+            ← Back to Settings
+        </a>
+
+        <h1>Security 🛡️</h1>
+
+        <p class="settings-subtitle">
+            Manage your ConnectHub account security.
+        </p>
+
+
+        <!-- Change Password -->
+
+        <div class="setting-item">
+
+            <div>
+                <strong>Change Password 🔑</strong>
+                <p>Update your account password.</p>
+            </div>
+
+            <button onclick="changePassword()">
+                Change
+            </button>
+
+        </div>
+
+
+        <!-- Login Protection -->
+
+        <div class="setting-item">
+
+            <div>
+                <strong>Login Protection 🔐</strong>
+                <p>Extra protection for your account.</p>
+            </div>
+
+            <button onclick="toggleProtection()">
+                <span id="protectionStatus">Off</span>
+            </button>
+
+        </div>
+
+
+        <!-- Account Status -->
+
+        <div class="setting-item">
+
+            <div>
+                <strong>Account Status ✅</strong>
+                <p>Your ConnectHub account is active.</p>
+            </div>
+
+            <span>Active</span>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+let protectionEnabled =
+    localStorage.getItem("loginProtection") === "true";
+
+
+function updateProtectionUI() {
+
+    document.getElementById("protectionStatus").textContent =
+        protectionEnabled ? "On" : "Off";
+}
+
+
+function toggleProtection() {
+
+    protectionEnabled =
+        !protectionEnabled;
+
+    localStorage.setItem(
+        "loginProtection",
+        protectionEnabled
+    );
+
+    updateProtectionUI();
+}
+
+
+function changePassword() {
+
+    const newPassword =
+        prompt("Enter your new password:");
+
+    if (!newPassword) {
+        return;
+    }
+
+    localStorage.setItem(
+        "userPassword",
+        newPassword
+    );
+
+    alert("Password updated successfully! 🔐");
+}
+
+
+updateProtectionUI();
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Support Requests - ConnectHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .admin-support-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .admin-support-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-support-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .admin-support-header h1 {
+            margin: 0;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #5b5cf0;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .refresh-btn:hover {
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            padding: 18px;
+            border-radius: 12px;
+            background: #f5f6ff;
+            text-align: center;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .support-request {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 15px;
+        }
+
+        .support-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .support-user {
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .support-email {
+            color: #777;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .support-message {
+            margin: 15px 0;
+            padding: 12px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+
+        .support-date {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+        }
+
+        .delete-btn {
+            margin-left: 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #dc3545;
+            color: white;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.9;
+        }
+
+        .no-support {
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            background: #f8f9ff;
+            border-radius: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .error-message {
+            padding: 20px;
+            text-align: center;
+            color: #b91c1c;
+            background: #fee2e2;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 700px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-support-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .support-top {
+                flex-direction: column;
+            }
+        }
+
+        body.dark-mode .admin-support-card,
+        body.dark-mode .support-request {
+            background: #1f2937;
+            color: white;
+            border-color: #374151;
+        }
+
+        body.dark-mode .stat-card,
+        body.dark-mode .support-message,
+        body.dark-mode .no-support {
+            background: #111827;
+            color: white;
+        }
+
+        body.dark-mode .support-email,
+        body.dark-mode .support-date {
+            color: #aaa;
+        }
+
+        body.dark-mode .status-select {
+            background: #111827;
+            color: white;
+            border-color: #4b5563;
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        ConnectHub
+    </div>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="messages.html">Messages</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="settings.html">⚙️ Settings</a>
+    </nav>
+
+    <div class="nav-buttons">
+        <a href="profile.html">
+            <button class="signup-btn">
+                My Profile
+            </button>
+        </a>
+    </div>
+
+</header>
+
+
+
+<main class="admin-support-container">
+
+    <section class="admin-support-card">
+
+
+        <div class="admin-support-header">
+
+            <div>
+
+                <h1>
+                    Support Requests 🛠️
+                </h1>
+
+                <p>
+                    Manage ConnectHub user support requests.
+                </p>
+
+            </div>
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadSupportRequests()"
+            >
+                🔄 Refresh
+            </button>
+
+        </div>
+
+
+
+        <!-- ======================================
+             STATISTICS
+        ======================================= -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <strong id="openCount">
+                    0
+                </strong>
+
+                Open
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <strong id="pendingCount">
+                    0
+                </strong>
+
+                Pending
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <strong id="resolvedCount">
+                    0
+                </strong>
+
+                Resolved
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ======================================
+             SUPPORT REQUESTS
+        ======================================= -->
+
+        <div id="supportRequests">
+
+            <div class="loading">
+                Loading support requests...
+            </div>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+
+<script>
+
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+if (
+    localStorage.getItem("connectHubDarkMode") === "true"
+) {
+
+    document.body.classList.add("dark-mode");
+
+}
+
+
+
+/* ==========================================
+   LOAD SUPPORT REQUESTS
+========================================== */
+
+async function loadSupportRequests() {
+
+    const container =
+        document.getElementById(
+            "supportRequests"
+        );
+
+
+    container.innerHTML = `
+        <div class="loading">
+            Loading support requests...
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch("/api/support");
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            container.innerHTML = `
+                <div class="error-message">
+                    ❌ Unable to load support requests.
+                </div>
+            `;
+
+            updateStats([]);
+
+            return;
+        }
+
+
+        const requests =
+            Array.isArray(data.requests)
+                ? data.requests
+                : [];
+
+
+        updateStats(requests);
+
+        renderRequests(requests);
+
+
+    } catch (error) {
+
+        console.error(
+            "Support load error:",
+            error
+        );
+
+
+        updateStats([]);
+
+
+        container.innerHTML = `
+            <div class="error-message">
+                ❌ Server connection failed.
+                <br><br>
+                Make sure your ConnectHub server is running.
+            </div>
+        `;
+
+    }
+
+}
+
+
+
+/* ==========================================
+   UPDATE STATISTICS
+========================================== */
+
+function updateStats(requests) {
+
+
+    let open = 0;
+    let pending = 0;
+    let resolved = 0;
+
+
+    requests.forEach(request => {
+
+        const status =
+            String(
+                request.status || "open"
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if (status === "open") {
+
+            open++;
+
+        } else if (status === "pending") {
+
+            pending++;
+
+        } else if (status === "resolved") {
+
+            resolved++;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "openCount"
+    ).textContent = open;
+
+
+    document.getElementById(
+        "pendingCount"
+    ).textContent = pending;
+
+
+    document.getElementById(
+        "resolvedCount"
+    ).textContent = resolved;
+
+}
+
+
+
+/* ==========================================
+   RENDER REQUESTS
+========================================== */
+
+function renderRequests(requests) {
+
+
+    const container =
+        document.getElementById(
+            "supportRequests"
+        );
+
+
+    if (!requests.length) {
+
+        container.innerHTML = `
+            <div class="no-support">
+
+                📭
+
+                <br><br>
+
+                No support requests found.
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+
+    container.innerHTML =
+        requests.map(request => {
+
+
+            const date =
+                request.createdAt
+                    ? new Date(
+                        request.createdAt
+                    ).toLocaleString()
+                    : "Unknown date";
+
+
+            const status =
+                String(
+                    request.status || "open"
+                )
+                .trim()
+                .toLowerCase();
+
+
+            return `
+
+                <div
+                    class="support-request"
+                    data-request-id="${Number(request.id)}"
+                >
+
+
+                    <div class="support-top">
+
+
+                        <div>
+
+                            <div class="support-user">
+
+                                👤
+
+                                ${escapeHtml(
+                                    request.name ||
+                                    "Unknown User"
+                                )}
+
+                            </div>
+
+
+                            <div class="support-email">
+
+                                📧
+
+                                ${escapeHtml(
+                                    request.email ||
+                                    "No email"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div>
+
+
+                            <select
+                                class="status-select"
+                                onchange="
+                                    updateStatus(
+                                        ${Number(request.id)},
+                                        this.value
+                                    )
+                                "
+                            >
+
+                                <option
+                                    value="open"
+                                    ${
+                                        status === "open"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Open
+                                </option>
+
+
+                                <option
+                                    value="pending"
+                                    ${
+                                        status === "pending"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Pending
+                                </option>
+
+
+                                <option
+                                    value="resolved"
+                                    ${
+                                        status === "resolved"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Resolved
+                                </option>
+
+                            </select>
+
+
+
+                            <button
+                                class="delete-btn"
+                                onclick="
+                                    deleteRequest(
+                                        ${Number(request.id)}
+                                    )
+                                "
+                                title="Delete support request"
+                            >
+                                🗑️
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="support-message">
+
+                        ${escapeHtml(
+                            request.message ||
+                            ""
+                        )}
+
+                    </div>
+
+
+
+                    <div class="support-date">
+
+                        📅
+
+                        ${escapeHtml(date)}
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+
+/* ==========================================
+   UPDATE STATUS
+========================================== */
+
+async function updateStatus(
+    requestId,
+    status
+) {
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/support/${requestId}`,
+                {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        status: status
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Unable to update status."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Reload the complete list.
+         * This automatically updates
+         * Open / Pending / Resolved counts.
+         */
+
+        await loadSupportRequests();
+
+
+    } catch (error) {
+
+        console.error(
+            "Status update error:",
+            error
+        );
+
+
+        alert(
+            "Server connection failed."
+        );
+
+    }
+
+}
+
+
+
+/* ==========================================
+   DELETE REQUEST
+========================================== */
+
+async function deleteRequest(
+    requestId
+) {
+
+
+    const confirmed =
+        confirm(
+            "Delete this support request permanently?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/support/${requestId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Unable to delete support request."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Support request deleted successfully! 🗑️"
+        );
+
+
+        /*
+         * Reload list and statistics
+         */
+
+        await loadSupportRequests();
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete support error:",
+            error
+        );
+
+
+        alert(
+            "Server connection failed."
+        );
+
+    }
+
+}
+
+
+
+/* ==========================================
+   HTML SECURITY
+========================================== */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        character => {
+
+            return {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character];
+
+        }
+    );
+
+}
+
+
+
+/* ==========================================
+   START
+========================================== */
+
+loadSupportRequests();
+
+
+</script>
+
+
+</body>
+
+</html>

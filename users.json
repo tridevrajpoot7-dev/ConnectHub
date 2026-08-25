@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1786993076855,
+    "name": "Tridev Rajpoot",
+    "email": "tridevrajpoot7@gmail.com",
+    "role": "admin",
+    "password": "$2b$12$D2g4hbm.Rde..7E64Zc8E.57XXViJIskggyazps6FBT9j8J1BenyO",
+    "age": 20,
+    "interests": [
+      "coding",
+      "study",
+      "gamiing",
+      "movie"
+    ],
+    "createdAt": "2026-08-17T18:57:56.855Z",
+    "bio": "RADHE RADHE",
+    "profilePhoto": "",
+    "followers": [
+      1787167498241
+    ],
+    "following": [
+      1787167498241
+    ],
+    "posts": 0,
+    "notificationSettings": {
+      "follow": true,
+      "like": true,
+      "comment": true,
+      "message": true,
+      "share": true
+    },
+    "darkMode": false
+  },
+  {
+    "id": 1787167498241,
+    "name": "Tridev Lodhi",
+    "email": "tridevrajpoot151@gmail.com",
+    "role": "user",
+    "password": "$2b$12$IyTxryjnVQgx91WOtb2lNe9hVrz4ESwkeJuJEN7NPPesxdTJt7eYK",
+    "age": 18,
+    "interests": [
+      "Gaming",
+      "Coding",
+      "Music",
+      "Sports",
+      "Movies",
+      "Study"
+    ],
+    "bio": "",
+    "profilePhoto": "",
+    "followers": [
+      1786993076855
+    ],
+    "following": [
+      1786993076855
+    ],
+    "posts": 1,
+    "createdAt": "2026-08-19T19:24:59.109Z",
+    "notificationSettings": {
+      "follow": true,
+      "like": true,
+      "comment": true,
+      "message": true,
+      "share": true
+    },
+    "darkMode": false
+  }
+]

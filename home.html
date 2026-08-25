@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home - ConnectHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =====================================
+           NAV BADGES
+        ===================================== */
+
+        .nav-link-badge {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+
+            min-width: 18px;
+            height: 18px;
+
+            padding: 0 5px;
+
+            background: #ef4444;
+            color: white;
+
+            border-radius: 50px;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            line-height: 1;
+
+            border: 2px solid white;
+
+            box-shadow: 0 2px 6px #00000025;
+
+            animation: badgePulse 1.5s infinite;
+        }
+
+        @keyframes badgePulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.12);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* =====================================
+           HOME
+        ===================================== */
+
+        .home-container {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* Welcome */
+
+        .welcome-box {
+            background: linear-gradient(135deg, #111827, #374151);
+            color: white;
+
+            padding: 30px;
+
+            border-radius: 22px;
+
+            margin-bottom: 22px;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+        }
+
+        .welcome-box h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .welcome-box p {
+            margin: 0;
+            color: #d1d5db;
+            font-size: 15px;
+        }
+
+        /* =====================================
+           SEARCH
+        ===================================== */
+
+        .home-search {
+            max-width: 1050px;
+            margin: 25px auto 0;
+
+            padding: 0 20px;
+
+            display: flex;
+            gap: 10px;
+        }
+
+        .home-search input {
+            flex: 1;
+
+            padding: 14px 16px;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            background: white;
+        }
+
+        .home-search input:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px rgba(99, 102, 241, 0.10);
+        }
+
+        .home-search button {
+            border: none;
+
+            background: #111827;
+            color: white;
+
+            padding: 12px 20px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+        }
+
+        .home-search button:hover {
+            opacity: 0.9;
+        }
+
+        .home-search-results {
+            max-width: 1050px;
+
+            margin: 10px auto 0;
+
+            padding: 0 20px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+        .home-search-user {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px;
+
+            background: white;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+
+            transition: 0.2s;
+        }
+
+        .home-search-user:hover {
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        .home-search-avatar {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            background: #e5e7eb;
+        }
+
+        .home-search-user p {
+            margin: 3px 0 0;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+        /* =====================================
+           CREATE POST
+        ===================================== */
+
+        .create-post {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 20px;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .create-post h2 {
+            margin-top: 0;
+            margin-bottom: 14px;
+
+            font-size: 19px;
+        }
+
+        .create-post textarea {
+            box-sizing: border-box;
+
+            width: 100%;
+
+            min-height: 110px;
+
+            padding: 15px;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            resize: vertical;
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            background: #f9fafb;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .create-post textarea:focus {
+            background: white;
+
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px rgba(99, 102, 241, 0.10);
+        }
+
+        .create-post .primary-btn {
+            margin-top: 12px;
+
+            border: none;
+
+            background: #111827;
+
+            color: white;
+
+            padding: 12px 22px;
+
+            border-radius: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .create-post .primary-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.92;
+        }
+
+        /* =====================================
+           POST CARD
+        ===================================== */
+
+        .post-card {
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+
+            transition: 0.2s;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.09);
+        }
+
+        .post-user {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding-bottom: 14px;
+        }
+
+        .post-user .avatar {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            background: #eef2ff;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .post-user strong {
+            font-size: 15px;
+        }
+
+        .post-user p {
+            margin: 3px 0 0;
+
+            color: #6b7280;
+
+            font-size: 12px;
+        }
+
+        .post-content {
+            color: #1f2937;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            margin: 16px 0;
+
+            white-space: pre-wrap;
+        }
+
+        /* =====================================
+           POST ACTIONS
+        ===================================== */
+
+        .post-actions {
+            display: flex;
+
+            gap: 8px;
+
+            border-top: 1px solid #eef0f3;
+
+            padding-top: 14px;
+
+            margin-top: 14px;
+        }
+
+        .post-actions button {
+            flex: 1;
+
+            border: none;
+
+            background: #f3f4f6;
+
+            color: #374151;
+
+            padding: 10px 12px;
+
+            border-radius: 11px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .post-actions button:hover {
+            background: #e5e7eb;
+
+            transform: translateY(-1px);
+        }
+
+        .post-actions button.liked {
+            background: #fee2e2;
+        }
+
+        /* =====================================
+           COMMENTS
+        ===================================== */
+
+        .comments-list {
+            margin-top: 12px;
+        }
+
+        .user-comment {
+            background: #f8fafc;
+
+            padding: 9px 12px;
+
+            border-radius: 10px;
+
+            margin: 7px 0;
+
+            font-size: 13px;
+        }
+
+        .comment-area {
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 12px;
+        }
+
+        .comment-area input {
+            flex: 1;
+
+            border: 1px solid #e5e7eb;
+
+            padding: 10px 12px;
+
+            border-radius: 10px;
+
+            outline: none;
+        }
+
+        .comment-area input:focus {
+            border-color: #6366f1;
+        }
+
+        .comment-area button {
+            border: none;
+
+            background: #111827;
+
+            color: white;
+
+            padding: 10px 14px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+        }
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        @media (max-width: 700px) {
+
+            .home-container {
+                margin: 18px auto;
+
+                padding: 0 12px;
+            }
+
+            .home-search {
+                margin-top: 18px;
+
+                padding: 0 12px;
+
+                flex-direction: column;
+            }
+
+            .home-search button {
+                width: 100%;
+            }
+
+            .home-search-results {
+                padding: 0 12px;
+            }
+
+            .welcome-box {
+                padding: 22px;
+
+                border-radius: 18px;
+            }
+
+            .welcome-box h1 {
+                font-size: 24px;
+            }
+
+            .create-post,
+            .post-card {
+                padding: 16px;
+            }
+
+            .post-actions {
+                flex-wrap: wrap;
+            }
+
+            .post-actions button {
+                flex: 1 1 30%;
+            }
+
+            .comment-area {
+                flex-direction: column;
+            }
+
+        }
+
+        /* =====================================
+           DARK MODE
+        ===================================== */
+
+        body.dark-mode {
+            background: #111827 !important;
+            color: #f9fafb !important;
+        }
+
+        body.dark-mode .home-search input,
+        body.dark-mode .home-search-user,
+        body.dark-mode .create-post,
+        body.dark-mode .post-card {
+            background: #1f2937 !important;
+            color: #f9fafb !important;
+        }
+
+        body.dark-mode .home-search input {
+            border-color: #4b5563 !important;
+        }
+
+        body.dark-mode .home-search input::placeholder {
+            color: #9ca3af !important;
+        }
+
+        body.dark-mode .home-search-user:hover {
+            background: #374151 !important;
+        }
+
+        body.dark-mode .home-search-user p,
+        body.dark-mode .post-user p {
+            color: #9ca3af !important;
+        }
+
+        body.dark-mode .post-content {
+            color: #f9fafb !important;
+        }
+
+        body.dark-mode .create-post textarea {
+            background: #374151 !important;
+
+            color: #f9fafb !important;
+
+            border-color: #4b5563 !important;
+        }
+
+        body.dark-mode .create-post textarea::placeholder {
+            color: #9ca3af !important;
+        }
+
+        body.dark-mode .post-actions {
+            border-color: #374151 !important;
+        }
+
+        body.dark-mode .post-actions button {
+            background: #374151 !important;
+            color: #f9fafb !important;
+        }
+
+        body.dark-mode .post-actions button:hover {
+            background: #4b5563 !important;
+        }
+
+        body.dark-mode .user-comment {
+            background: #374151 !important;
+            color: #f9fafb !important;
+        }
+
+        body.dark-mode .comment-area input {
+            background: #374151 !important;
+
+            color: #ffffff !important;
+
+            border-color: #4b5563 !important;
+        }
+
+        body.dark-mode .comment-area input::placeholder {
+            color: #9ca3af !important;
+        }
+
+        body.dark-mode .notification-badge {
+            border-color: #1f2937;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        ConnectHub
+    </div>
+
+    <nav>
+
+        <a href="home.html">
+            Home
+        </a>
+
+        <a href="discover.html">
+            Discover
+        </a>
+
+        <a
+            href="messages.html"
+            class="nav-link-badge"
+        >
+            Messages
+
+            <span
+                id="messageBadge"
+                class="notification-badge"
+                style="display:none;"
+            >
+                0
+            </span>
+        </a>
+
+        <a
+            href="notifications.html"
+            class="nav-link-badge"
+        >
+            Notifications
+
+            <span
+                id="notificationBadge"
+                class="notification-badge"
+                style="display:none;"
+            >
+                0
+            </span>
+        </a>
+
+        <a href="settings.html">
+            ⚙️ Settings
+        </a>
+
+    </nav>
+
+    <div class="nav-buttons">
+
+        <a href="profile.html">
+
+            <button class="signup-btn">
+                My Profile
+            </button>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================
+     SEARCH
+===================================== -->
+
+<section class="home-search">
+
+    <input
+        type="text"
+        id="homeSearchInput"
+        placeholder="🔍 Search people on ConnectHub..."
+        autocomplete="off"
+    >
+
+    <button onclick="searchHomeUser()">
+        Search
+    </button>
+
+</section>
+
+<div
+    id="homeSearchResults"
+    class="home-search-results"
+></div>
+
+
+<!-- =====================================
+     MAIN
+===================================== -->
+
+<main class="home-container">
+
+    <!-- Welcome -->
+
+    <section class="welcome-box">
+
+        <h1 id="welcomeUser">
+            Welcome 👋
+        </h1>
+
+        <p>
+            Discover people and communities
+            that match your interests.
+        </p>
+
+    </section>
+
+
+    <!-- Create Post -->
+
+    <section class="create-post">
+
+        <h2>
+            What's on your mind?
+        </h2>
+
+        <textarea
+            id="postText"
+            placeholder="Share something with the community..."
+        ></textarea>
+
+        <button
+            class="primary-btn"
+            onclick="createPost()"
+        >
+            + Create Post
+        </button>
+
+    </section>
+
+
+    <!-- Feed -->
+
+    <section id="postFeed"></section>
+
+</main>
+
+
+<script>
+
+/* =====================================
+   USER
+===================================== */
+
+const userName =
+    localStorage.getItem("userName") || "User";
+
+const userId =
+    localStorage.getItem("userId");
+
+document.getElementById("welcomeUser").textContent =
+    "Welcome, " + userName + " 👋";
+
+
+/* =====================================
+   UNREAD COUNTS
+===================================== */
+
+async function loadUnreadCounts() {
+
+    if (!userId) return;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/unread-counts/" +
+                encodeURIComponent(userId)
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok || !data.success) {
+            return;
+        }
+
+        const messageBadge =
+            document.getElementById("messageBadge");
+
+        const notificationBadge =
+            document.getElementById("notificationBadge");
+
+
+        /* Messages */
+
+        if (
+            data.messages &&
+            Number(data.messages) > 0
+        ) {
+
+            messageBadge.textContent =
+                Number(data.messages) > 99
+                    ? "99+"
+                    : data.messages;
+
+            messageBadge.style.display = "flex";
+
+        } else {
+
+            messageBadge.style.display = "none";
+
+        }
+
+
+        /* Notifications */
+
+        if (
+            data.notifications &&
+            Number(data.notifications) > 0
+        ) {
+
+            notificationBadge.textContent =
+                Number(data.notifications) > 99
+                    ? "99+"
+                    : data.notifications;
+
+            notificationBadge.style.display = "flex";
+
+        } else {
+
+            notificationBadge.style.display = "none";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unread count error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   LOAD POSTS
+===================================== */
+
+async function loadPosts() {
+
+    try {
+
+        const response =
+            await fetch("/api/posts");
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            alert("Unable to load posts.");
+
+            return;
+        }
+
+        const postFeed =
+            document.getElementById("postFeed");
+
+        postFeed.innerHTML = "";
+
+
+        if (!data.posts || data.posts.length === 0) {
+
+            postFeed.innerHTML = `
+
+                <div class="post-card">
+
+                    <p class="post-content">
+
+                        No posts yet.
+                        Be the first to post! 🚀
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        data.posts.forEach(function(post) {
+
+            const postElement =
+                document.createElement("div");
+
+            postElement.className = "post-card";
+
+            postElement.dataset.postId = post.id;
+
+
+            postElement.innerHTML = `
+
+                <div class="post-user">
+
+                    <div class="avatar">
+                        👤
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(post.userName)}
+                        </strong>
+
+                        <p>
+                            ${formatDate(post.createdAt)}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <p class="post-content">
+                    ${escapeHTML(post.content)}
+                </p>
+
+
+                <div class="post-actions">
+
+                    <button onclick="likePost(this)">
+
+                        ❤️ Like
+
+                        <span>
+                            ${post.likes || 0}
+                        </span>
+
+                    </button>
+
+
+                    <button onclick="commentPost(this)">
+
+                        💬 Comment
+
+                    </button>
+
+
+                    <button onclick="sharePost(this)">
+
+                        ↗ Share
+
+                        <span class="share-count">
+                            ${post.shares || 0}
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="comments-list">
+
+                    ${renderComments(post.comments || [])}
+
+                </div>
+
+            `;
+
+
+            postFeed.appendChild(postElement);
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Load posts error:",
+            error
+        );
+
+        alert(
+            "❌ Posts load nahi ho pa rahe."
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   CREATE POST
+===================================== */
+
+async function createPost() {
+
+    const postText =
+        document
+            .getElementById("postText")
+            .value
+            .trim();
+
+
+    if (!postText) {
+
+        alert(
+            "Please write something first."
+        );
+
+        return;
+    }
+
+
+    const currentUserId =
+        localStorage.getItem("userId");
+
+    const currentUserName =
+        localStorage.getItem("userName") || "User";
+
+
+    if (!currentUserId) {
+
+        alert(
+            "❌ User ID nahi mila!\n\n" +
+            "Pehle Logout karke dobara Login karo."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/posts",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            currentUserId,
+
+                        userName:
+                            currentUserName,
+
+                        content:
+                            postText
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            alert(
+                "❌ Post create nahi hui!\n\n" +
+                (
+                    data.message ||
+                    "Unknown error"
+                )
+            );
+
+            return;
+        }
+
+
+        document.getElementById(
+            "postText"
+        ).value = "";
+
+
+        await loadPosts();
+
+
+        let postsCount =
+            Number(
+                localStorage.getItem("postsCount")
+            ) || 0;
+
+        postsCount++;
+
+
+        localStorage.setItem(
+            "postsCount",
+            postsCount
+        );
+
+
+        alert(
+            "✅ Post created! 🎉"
+        );
+
+    }
+
+    catch (error) {
+
+        alert(
+            "❌ Server error!\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   LIKE
+===================================== */
+
+async function likePost(button) {
+
+    const post =
+        button.closest(".post-card");
+
+    const postId =
+        post.dataset.postId;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/posts/" +
+                postId +
+                "/like",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        userId: userId
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Unable to like post."
+            );
+
+            return;
+        }
+
+
+        const count =
+            button.querySelector("span");
+
+        count.textContent =
+            data.likes;
+
+
+        loadUnreadCounts();
+
+    }
+
+    catch (error) {
+
+        alert(
+            "❌ Like failed."
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   COMMENT
+===================================== */
+
+function commentPost(button) {
+
+    const post =
+        button.closest(".post-card");
+
+
+    const oldBox =
+        post.querySelector(".comment-area");
+
+
+    if (oldBox) {
+
+        oldBox
+            .querySelector("input")
+            .focus();
+
+        return;
+    }
+
+
+    const area =
+        document.createElement("div");
+
+    area.className = "comment-area";
+
+
+    area.innerHTML = `
+
+        <input
+            type="text"
+            placeholder="Write a comment..."
+        >
+
+        <button>
+            Post Comment
+        </button>
+
+    `;
+
+
+    post.appendChild(area);
+
+
+    const input =
+        area.querySelector("input");
+
+    const postButton =
+        area.querySelector("button");
+
+
+    postButton.onclick =
+        async function() {
+
+            const text =
+                input.value.trim();
+
+
+            if (!text) {
+
+                alert(
+                    "Please write a comment first."
+                );
+
+                return;
+            }
+
+
+            const currentUserId =
+                localStorage.getItem("userId");
+
+            const currentUserName =
+                localStorage.getItem("userName") || "User";
+
+
+            if (!currentUserId) {
+
+                alert(
+                    "Please login first."
+                );
+
+                return;
+            }
+
+
+            const postId =
+                post.dataset.postId;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/posts/" +
+                        postId +
+                        "/comments",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                userId:
+                                    currentUserId,
+
+                                userName:
+                                    currentUserName,
+
+                                text:
+                                    text
+
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Comment failed."
+                    );
+
+                    return;
+                }
+
+
+                area.remove();
+
+                await loadPosts();
+
+                loadUnreadCounts();
+
+            }
+
+            catch (error) {
+
+                alert(
+                    "❌ Comment failed."
+                );
+
+            }
+
+        };
+
+
+    input.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                postButton.click();
+
+            }
+
+        }
+    );
+
+
+    input.focus();
+
+}
+
+
+/* =====================================
+   SHARE
+===================================== */
+
+async function sharePost(button) {
+
+    const post =
+        button.closest(".post-card");
+
+    const postId =
+        post.dataset.postId;
+
+
+    const text =
+        post
+            .querySelector(".post-content")
+            .textContent
+            .trim();
+
+
+    try {
+
+        await navigator.clipboard.writeText(text);
+
+    }
+
+    catch (error) {
+        // Clipboard unavailable
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/posts/" +
+                postId +
+                "/share",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        userId: userId
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                data.message ||
+                "Share failed."
+            );
+
+            return;
+        }
+
+
+        const count =
+            button.querySelector(".share-count");
+
+        count.textContent =
+            data.shares;
+
+
+        loadUnreadCounts();
+
+
+        alert(
+            "✅ Post shared! 📤"
+        );
+
+    }
+
+    catch (error) {
+
+        alert(
+            "❌ Share failed."
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   COMMENTS DISPLAY
+===================================== */
+
+function renderComments(comments) {
+
+    if (
+        !comments ||
+        comments.length === 0
+    ) {
+
+        return "";
+    }
+
+
+    return comments.map(
+        function(comment) {
+
+            return `
+
+                <p class="user-comment">
+
+                    💬
+
+                    <strong>
+                        ${escapeHTML(comment.userName)}
+                    </strong>
+
+                    :
+
+                    ${escapeHTML(comment.text)}
+
+                </p>
+
+            `;
+
+        }
+    ).join("");
+
+}
+
+
+/* =====================================
+   SECURITY
+===================================== */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =====================================
+   DATE
+===================================== */
+
+function formatDate(date) {
+
+    try {
+
+        return new Date(date).toLocaleString();
+
+    }
+
+    catch {
+
+        return "Just now";
+
+    }
+
+}
+
+
+/* =====================================
+   HOME USER SEARCH
+===================================== */
+
+async function searchHomeUser() {
+
+    const input =
+        document.getElementById(
+            "homeSearchInput"
+        );
+
+    const results =
+        document.getElementById(
+            "homeSearchResults"
+        );
+
+
+    const query =
+        input.value.trim().toLowerCase();
+
+
+    if (!query) {
+
+        results.innerHTML = "";
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/users?currentUserId=" +
+                encodeURIComponent(userId)
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            results.innerHTML = `
+
+                <div class="post-card">
+
+                    Unable to search users.
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        const users =
+            (data.users || []).filter(
+                function(user) {
+
+                    if (
+                        String(user.id) ===
+                        String(userId)
+                    ) {
+
+                        return false;
+                    }
+
+
+                    const name =
+                        String(user.name || "")
+                            .toLowerCase();
+
+
+                    const bio =
+                        String(user.bio || "")
+                            .toLowerCase();
+
+
+                    return (
+                        name.includes(query) ||
+                        bio.includes(query)
+                    );
+
+                }
+            );
+
+
+        if (!users.length) {
+
+            results.innerHTML = `
+
+                <div class="post-card">
+
+                    <strong>
+                        No users found 🔍
+                    </strong>
+
+                    <p class="post-content">
+                        Try another name.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        results.innerHTML =
+            users.map(
+                function(user) {
+
+                    const photo =
+                        user.profilePhoto || "";
+
+
+                    return `
+
+                        <div
+                            class="home-search-user"
+                            onclick="openSearchProfile(${JSON.stringify(user.id)})"
+                        >
+
+                            ${
+                                photo
+
+                                ? `
+
+                                    <img
+                                        class="home-search-avatar"
+                                        src="${escapeHTML(photo)}"
+                                        alt="Profile"
+                                        onerror="this.style.display='none'"
+                                    >
+
+                                  `
+
+                                : `
+
+                                    <div
+                                        class="home-search-avatar"
+                                        style="
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                        "
+                                    >
+                                        👤
+                                    </div>
+
+                                  `
+                            }
+
+
+                            <div>
+
+                                <strong>
+                                    ${escapeHTML(
+                                        user.name || "User"
+                                    )}
+                                </strong>
+
+                                <p>
+                                    ${escapeHTML(
+                                        user.bio ||
+                                        "ConnectHub user"
+                                    )}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Home search error:",
+            error
+        );
+
+
+        results.innerHTML = `
+
+            <div class="post-card">
+
+                Server error.
+                Please try again.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================
+   OPEN PROFILE
+===================================== */
+
+function openSearchProfile(profileUserId) {
+
+    window.location.href =
+        "profile.html?userId=" +
+        encodeURIComponent(profileUserId);
+
+}
+
+
+/* =====================================
+   ENTER TO SEARCH
+===================================== */
+
+document
+    .getElementById("homeSearchInput")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                searchHomeUser();
+
+            }
+
+        }
+    );
+
+
+/* =====================================
+   DARK MODE
+===================================== */
+
+if (
+    localStorage.getItem(
+        "connectHubDarkMode"
+    ) === "true"
+) {
+
+    document.body.classList.add(
+        "dark-mode"
+    );
+
+}
+
+
+/* =====================================
+   START
+===================================== */
+
+loadPosts();
+
+loadUnreadCounts();
+
+
+/* Refresh unread badges every 5 seconds */
+
+setInterval(
+    loadUnreadCounts,
+    5000
+);
+
+</script>
+
+</body>
+</html>

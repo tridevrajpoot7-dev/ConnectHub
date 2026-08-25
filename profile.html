@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile - ConnectHub</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f8fc;
+    color: #1f2937;
+    transition: background 0.25s, color 0.25s;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    min-height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 7%;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    color: #5b5cf0;
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav-links a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #5b5cf0;
+}
+
+/* =========================
+   NOTIFICATION BADGE
+========================= */
+
+.notification-badge {
+    position: absolute;
+
+    top: -10px;
+    right: -12px;
+
+    min-width: 18px;
+    height: 18px;
+
+    padding: 0 5px;
+
+    background: #ef4444;
+    color: white;
+
+    border-radius: 20px;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+    font-weight: bold;
+
+    border: 2px solid white;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+    max-width: 950px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+/* =========================
+   PROFILE CARD
+========================= */
+
+.profile-card {
+    background: white;
+    border-radius: 20px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.06);
+
+    margin-bottom: 25px;
+}
+
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.profile-photo {
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    background: #eeeeff;
+
+    border: 4px solid #f0f0ff;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.email {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.bio {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats {
+    display: flex;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+.stat {
+    text-align: center;
+    cursor: pointer;
+}
+
+.stat strong {
+    display: block;
+    color: #5b5cf0;
+    font-size: 22px;
+}
+
+.stat span {
+    color: #777;
+    font-size: 13px;
+}
+
+.stat:hover strong {
+    transform: scale(1.05);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 9px;
+    padding: 11px 18px;
+    font-weight: 600;
+}
+
+.follow-btn {
+    background: #5b5cf0;
+    color: white;
+}
+
+.following-btn {
+    background: #eeeeff;
+    color: #5b5cf0;
+}
+
+.message-btn {
+    background: #f3f4f6;
+    color: #333;
+}
+
+.edit-btn {
+    background: #5b5cf0;
+    color: white;
+}
+
+.follow-btn:hover {
+    background: #4b4ce0;
+}
+
+.following-btn:hover {
+    background: #e4e4ff;
+}
+
+.message-btn:hover {
+    background: #e5e7eb;
+}
+
+.edit-btn:hover {
+    background: #4b4ce0;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =========================
+   INTERESTS
+========================= */
+
+.section-title {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.interest {
+    background: #f1f1ff;
+    color: #5556d9;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+}
+
+/* =========================
+   POSTS
+========================= */
+
+.posts-section {
+    margin-top: 25px;
+}
+
+.post-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 7px 25px rgba(0,0,0,0.05);
+
+    transition: outline 0.2s;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.post-avatar {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    background: #eeeeff;
+}
+
+.post-name {
+    font-weight: bold;
+}
+
+.post-date {
+    color: #999;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.post-content {
+    line-height: 1.6;
+    white-space: pre-wrap;
+
+    margin-bottom: 15px;
+}
+
+/* =========================
+   POST ACTIONS
+========================= */
+
+.post-actions {
+    display: flex;
+    gap: 8px;
+
+    border-top: 1px solid #eee;
+
+    padding-top: 12px;
+
+    flex-wrap: wrap;
+}
+
+.post-actions button {
+    background: transparent;
+    color: #555;
+
+    padding: 8px 12px;
+}
+
+.post-actions button:hover {
+    background: #f1f1ff;
+    color: #5b5cf0;
+}
+
+.like-active {
+    color: #5b5cf0 !important;
+}
+
+/* =========================
+   COMMENTS
+========================= */
+
+.comments {
+    margin-top: 15px;
+    display: none;
+}
+
+.comment {
+    background: #f7f7fb;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    margin-bottom: 8px;
+}
+
+.comment strong {
+    font-size: 13px;
+}
+
+.comment p {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+}
+
+.comment-input {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    padding: 10px;
+
+    outline: none;
+}
+
+.comment-input input:focus {
+    border-color: #5b5cf0;
+}
+
+.comment-input button {
+    background: #5b5cf0;
+    color: white;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    text-align: center;
+
+    background: white;
+
+    padding: 50px 20px;
+
+    border-radius: 16px;
+
+    color: #777;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark-mode {
+    background: #111827;
+    color: #f3f4f6;
+}
+
+body.dark-mode .navbar,
+body.dark-mode .profile-card,
+body.dark-mode .post-card,
+body.dark-mode .status {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+body.dark-mode .nav-links a {
+    color: #d1d5db;
+}
+
+body.dark-mode .nav-links a:hover,
+body.dark-mode .nav-links a.active {
+    color: #818cf8;
+}
+
+body.dark-mode .email,
+body.dark-mode .bio,
+body.dark-mode .stat span,
+body.dark-mode .post-date {
+    color: #9ca3af;
+}
+
+body.dark-mode .message-btn {
+    background: #374151;
+    color: #f3f4f6;
+}
+
+body.dark-mode .following-btn {
+    background: #312e81;
+    color: #c7d2fe;
+}
+
+body.dark-mode .interest {
+    background: #312e81;
+    color: #c7d2fe;
+}
+
+body.dark-mode .post-actions {
+    border-color: #374151;
+}
+
+body.dark-mode .post-actions button {
+    color: #d1d5db;
+}
+
+body.dark-mode .comment {
+    background: #374151;
+}
+
+body.dark-mode .comment p {
+    color: #d1d5db;
+}
+
+body.dark-mode .comment-input input {
+    background: #111827;
+    color: white;
+    border-color: #4b5563;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 12px 18px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .nav-links {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 0 15px;
+        margin-top: 20px;
+    }
+
+    .profile-top {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-info {
+        width: 100%;
+    }
+
+    .profile-info h1 {
+        font-size: 25px;
+    }
+
+    .stats {
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .actions {
+        justify-content: center;
+    }
+
+    .profile-card {
+        padding: 25px 18px;
+    }
+
+    .post-actions {
+        flex-direction: column;
+    }
+
+    .post-actions button {
+        width: 100%;
+    }
+
+    .comment-input {
+        flex-direction: column;
+    }
+
+    .comment-input button {
+        width: 100%;
+    }
+
+    .notification-badge {
+        top: -7px;
+        right: -8px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<header class="navbar">
+
+    <a href="home.html" class="logo">
+        ConnectHub
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="home.html">
+            🏠 Home
+        </a>
+
+        <a href="discover.html">
+            🔍 Discover
+        </a>
+
+        <a href="messages.html">
+            💬 Messages
+        </a>
+
+        <a
+            href="notifications.html"
+            id="notificationLink"
+        >
+            🔔 Notifications
+
+            <span
+                id="notificationBadge"
+                class="notification-badge"
+            ></span>
+        </a>
+
+        <a
+            href="profile.html"
+            class="active"
+        >
+            👤 Profile
+        </a>
+
+        <a href="settings.html">
+            ⚙️ Settings
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="container">
+
+    <div id="profileArea">
+
+        <div class="status">
+            Loading profile...
+        </div>
+
+    </div>
+
+
+    <div
+        id="postsArea"
+        class="posts-section"
+    ></div>
+
+</main>
+
+
+<script>
+
+/* =========================================
+   CURRENT USER
+========================================= */
+
+const currentUserId =
+    localStorage.getItem("userId");
+
+
+/* =========================================
+   VIEWED PROFILE
+========================================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const profileUserId =
+    params.get("userId") ||
+    currentUserId;
+
+
+/* =========================================
+   LOGIN CHECK
+========================================= */
+
+if (!currentUserId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   LOAD PROFILE
+========================================= */
+
+async function loadProfile() {
+
+    const profileArea =
+        document.getElementById(
+            "profileArea"
+        );
+
+    const postsArea =
+        document.getElementById(
+            "postsArea"
+        );
+
+    if (!profileUserId) {
+
+        profileArea.innerHTML = `
+            <div class="status">
+                ❌ Profile ID missing.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/users/${encodeURIComponent(
+                    profileUserId
+                )}?currentUserId=${encodeURIComponent(
+                    currentUserId
+                )}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            profileArea.innerHTML = `
+                <div class="status">
+                    ❌ Profile not found.
+                </div>
+            `;
+
+            postsArea.innerHTML = "";
+
+            return;
+        }
+
+
+        renderProfile(data.user);
+
+        renderPosts(
+            data.user.recentPosts || []
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Profile error:",
+            error
+        );
+
+        profileArea.innerHTML = `
+            <div class="status">
+                ❌ Server se connection nahi ho pa raha.
+                <br><br>
+                Make sure server.js is running.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER PROFILE
+========================================= */
+
+function renderProfile(user) {
+
+    const profileArea =
+        document.getElementById(
+            "profileArea"
+        );
+
+
+    const isOwnProfile =
+        String(user.id) ===
+        String(currentUserId);
+
+
+    const photo =
+        user.profilePhoto ||
+        "https://via.placeholder.com/150";
+
+
+    const interests =
+        Array.isArray(user.interests)
+            ? user.interests
+            : [];
+
+
+    const interestHTML =
+        interests.length
+
+            ? interests.map(
+                item =>
+                    `<span class="interest">
+                        ${escapeHtml(item)}
+                    </span>`
+            ).join("")
+
+            : `
+                <span class="interest">
+                    No interests added
+                </span>
+            `;
+
+
+    let buttonsHTML = "";
+
+
+    /* =====================================
+       OWN PROFILE
+    ===================================== */
+
+    if (isOwnProfile) {
+
+        buttonsHTML = `
+
+            <button
+                class="edit-btn"
+                onclick="editProfile()"
+            >
+                ✏️ Edit Profile
+            </button>
+
+        `;
+
+    }
+
+
+    /* =====================================
+       OTHER USER PROFILE
+    ===================================== */
+
+    else {
+
+        const following =
+            Boolean(
+                user.isFollowing
+            );
+
+
+        buttonsHTML = `
+
+            <button
+                id="followButton"
+                class="${
+                    following
+                        ? "following-btn"
+                        : "follow-btn"
+                }"
+                onclick="
+                    toggleFollow(
+                        ${Number(user.id)},
+                        ${following}
+                    )
+                "
+            >
+                ${
+                    following
+                        ? "✓ Following"
+                        : "+ Follow"
+                }
+            </button>
+
+
+            <button
+                class="message-btn"
+                onclick="
+                    openMessages(
+                        ${Number(user.id)}
+                    )
+                "
+            >
+                💬 Message
+            </button>
+
+        `;
+
+    }
+
+
+    profileArea.innerHTML = `
+
+        <section class="profile-card">
+
+            <div class="profile-top">
+
+                <img
+                    src="${escapeAttribute(photo)}"
+                    class="profile-photo"
+                    alt="Profile Photo"
+
+                    onerror="
+                        this.src='https://via.placeholder.com/150'
+                    "
+                >
+
+
+                <div class="profile-info">
+
+                    <h1>
+                        ${escapeHtml(
+                            user.name ||
+                            "Unknown User"
+                        )}
+                    </h1>
+
+
+                    <div class="email">
+
+                        ${escapeHtml(
+                            user.email ||
+                            ""
+                        )}
+
+                    </div>
+
+
+                    <p class="bio">
+
+                        ${escapeHtml(
+                            user.bio ||
+                            "No bio yet."
+                        )}
+
+                    </p>
+
+
+                    <!-- =================
+                         STATS
+                    ================== -->
+
+                    <div class="stats">
+
+
+                        <!-- POSTS -->
+
+                        <div class="stat">
+
+                            <strong>
+                                ${Number(
+                                    user.posts || 0
+                                )}
+                            </strong>
+
+                            <span>
+                                Posts
+                            </span>
+
+                        </div>
+
+
+                        <!-- FOLLOWERS -->
+
+                        <div
+                            class="stat"
+                            onclick="
+                                openFollowers(
+                                    ${Number(user.id)}
+                                )
+                            "
+                            title="View Followers"
+                        >
+
+                            <strong
+                                id="followersCount"
+                            >
+                                ${Number(
+                                    user.followers || 0
+                                )}
+                            </strong>
+
+                            <span>
+                                Followers
+                            </span>
+
+                        </div>
+
+
+                        <!-- FOLLOWING -->
+
+                        <div
+                            class="stat"
+                            onclick="
+                                openFollowing(
+                                    ${Number(user.id)}
+                                )
+                            "
+                            title="View Following"
+                        >
+
+                            <strong
+                                id="followingCount"
+                            >
+                                ${Number(
+                                    user.following || 0
+                                )}
+                            </strong>
+
+                            <span>
+                                Following
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        ${buttonsHTML}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================
+                 INTERESTS
+            ================== -->
+
+            <div style="margin-top:25px;">
+
+                <h2 class="section-title">
+                    Interests
+                </h2>
+
+                <div class="interests">
+
+                    ${interestHTML}
+
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================
+   RENDER POSTS
+========================================= */
+
+function renderPosts(posts) {
+
+    const postsArea =
+        document.getElementById(
+            "postsArea"
+        );
+
+
+    if (!posts.length) {
+
+        postsArea.innerHTML = `
+
+            <div class="status">
+
+                📝
+
+                <br><br>
+
+                No posts yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    postsArea.innerHTML = `
+
+        <h2 class="section-title">
+            Posts
+        </h2>
+
+        ${posts.map(
+            post =>
+                createPostHTML(post)
+        ).join("")}
+
+    `;
+
+}
+
+
+/* =========================================
+   POST HTML
+========================================= */
+
+function createPostHTML(post) {
+
+    const likedBy =
+        Array.isArray(post.likedBy)
+            ? post.likedBy
+            : [];
+
+
+    const isLiked =
+        likedBy.some(
+            id =>
+                Number(id) ===
+                Number(currentUserId)
+        );
+
+
+    const comments =
+        Array.isArray(post.comments)
+            ? post.comments
+            : [];
+
+
+    const photo =
+        post.profilePhoto ||
+        "https://via.placeholder.com/100";
+
+
+    return `
+
+        <article
+            class="post-card"
+            data-post-id="${Number(post.id)}"
+        >
+
+
+            <div class="post-header">
+
+                <img
+                    class="post-avatar"
+                    src="${escapeAttribute(photo)}"
+                    alt="User"
+                >
+
+
+                <div>
+
+                    <div class="post-name">
+
+                        ${escapeHtml(
+                            post.userName ||
+                            "User"
+                        )}
+
+                    </div>
+
+
+                    <div class="post-date">
+
+                        ${formatDate(
+                            post.createdAt
+                        )}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="post-content">
+
+                ${escapeHtml(
+                    post.content || ""
+                )}
+
+            </div>
+
+
+            <div class="post-actions">
+
+
+                <!-- LIKE -->
+
+                <button
+                    class="${
+                        isLiked
+                            ? "like-active"
+                            : ""
+                    }"
+
+                    onclick="
+                        toggleLike(
+                            ${Number(post.id)}
+                        )
+                    "
+                >
+
+                    ${
+                        isLiked
+                            ? "❤️"
+                            : "🤍"
+                    }
+
+                    Like
+
+                    (${Number(
+                        post.likes || 0
+                    )})
+
+                </button>
+
+
+                <!-- COMMENT -->
+
+                <button
+                    onclick="
+                        toggleComments(
+                            ${Number(post.id)}
+                        )
+                    "
+                >
+
+                    💬 Comment
+
+                    (${comments.length})
+
+                </button>
+
+
+                <!-- SHARE -->
+
+                <button
+                    onclick="
+                        sharePost(
+                            ${Number(post.id)}
+                        )
+                    "
+                >
+
+                    🔗 Share
+
+                    (${Number(
+                        post.shares || 0
+                    )})
+
+                </button>
+
+
+            </div>
+
+
+            <!-- COMMENTS -->
+
+            <div
+                id="comments-${Number(post.id)}"
+                class="comments"
+            >
+
+                ${renderComments(
+                    comments
+                )}
+
+
+                <div class="comment-input">
+
+                    <input
+                        id="comment-input-${Number(
+                            post.id
+                        )}"
+
+                        placeholder="Write a comment..."
+
+                        onkeydown="
+                            if(event.key === 'Enter'){
+                                event.preventDefault();
+                                addComment(${Number(post.id)});
+                            }
+                        "
+                    >
+
+
+                    <button
+                        onclick="
+                            addComment(
+                                ${Number(post.id)}
+                            )
+                        "
+                    >
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    `;
+
+}
+
+
+/* =========================================
+   COMMENTS
+========================================= */
+
+function renderComments(comments) {
+
+    if (!comments.length) {
+
+        return `
+
+            <p style="
+                color:#888;
+                font-size:13px;
+                margin-bottom:10px;
+            ">
+
+                No comments yet.
+
+            </p>
+
+        `;
+
+    }
+
+
+    return comments.map(
+        comment => `
+
+            <div class="comment">
+
+                <strong>
+
+                    ${escapeHtml(
+                        comment.userName ||
+                        "User"
+                    )}
+
+                </strong>
+
+
+                <p>
+
+                    ${escapeHtml(
+                        comment.text ||
+                        ""
+                    )}
+
+                </p>
+
+            </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================
+   LIKE
+========================================= */
+
+async function toggleLike(postId) {
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/posts/${postId}/like`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            Number(
+                                currentUserId
+                            )
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Unable to like post."
+            );
+
+            return;
+
+        }
+
+
+        await loadProfile();
+
+        loadUnreadCounts();
+
+
+    } catch (error) {
+
+        console.error(
+            "Like error:",
+            error
+        );
+
+        alert(
+            "Server connection failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   COMMENTS TOGGLE
+========================================= */
+
+function toggleComments(postId) {
+
+    const box =
+        document.getElementById(
+            `comments-${postId}`
+        );
+
+
+    if (!box) return;
+
+
+    if (
+        box.style.display ===
+        "block"
+    ) {
+
+        box.style.display =
+            "none";
+
+    } else {
+
+        box.style.display =
+            "block";
+
+
+        const input =
+            document.getElementById(
+                `comment-input-${postId}`
+            );
+
+
+        if (input) {
+            input.focus();
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   ADD COMMENT
+========================================= */
+
+async function addComment(postId) {
+
+    const input =
+        document.getElementById(
+            `comment-input-${postId}`
+        );
+
+
+    if (!input) return;
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        alert(
+            "Please write a comment first."
+        );
+
+        return;
+
+    }
+
+
+    if (!currentUserId) {
+
+        alert(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+
+    const userName =
+        localStorage.getItem(
+            "userName"
+        ) || "User";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/posts/${postId}/comments`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            Number(
+                                currentUserId
+                            ),
+
+                        userName:
+                            userName,
+
+                        text:
+                            text
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Unable to comment."
+            );
+
+            return;
+
+        }
+
+
+        input.value = "";
+
+        await loadProfile();
+
+        loadUnreadCounts();
+
+
+    } catch (error) {
+
+        console.error(
+            "Comment error:",
+            error
+        );
+
+        alert(
+            "Server connection failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   SHARE
+========================================= */
+
+async function sharePost(postId) {
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/posts/${postId}/share`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            Number(
+                                currentUserId
+                            )
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Unable to share post."
+            );
+
+            return;
+
+        }
+
+
+        /* =========================
+           SHARE URL
+        ========================= */
+
+        const shareUrl =
+            `${window.location.origin}/profile.html?userId=${encodeURIComponent(
+                profileUserId
+            )}&postId=${encodeURIComponent(
+                postId
+            )}`;
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                shareUrl
+            );
+
+            alert(
+                "✅ Post shared! Link copied."
+            );
+
+        } catch {
+
+            alert(
+                "✅ Post shared successfully!"
+            );
+
+        }
+
+
+        await loadProfile();
+
+        loadUnreadCounts();
+
+
+    } catch (error) {
+
+        console.error(
+            "Share error:",
+            error
+        );
+
+        alert(
+            "Server connection failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   FOLLOW / UNFOLLOW
+========================================= */
+
+async function toggleFollow(
+    targetId,
+    isFollowing
+) {
+
+    const button =
+        document.getElementById(
+            "followButton"
+        );
+
+
+    if (button) {
+        button.disabled = true;
+    }
+
+
+    const endpoint =
+        isFollowing
+            ? `/api/users/${targetId}/unfollow`
+            : `/api/users/${targetId}/follow`;
+
+
+    try {
+
+        const response =
+            await fetch(
+                endpoint,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            Number(
+                                currentUserId
+                            )
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Follow action failed."
+            );
+
+            if (button) {
+                button.disabled = false;
+            }
+
+            return;
+
+        }
+
+
+        /*
+         * Profile reload
+         * Followers count update
+         * Following count update
+         * Follow button update
+         */
+
+        await loadProfile();
+
+        loadUnreadCounts();
+
+
+    } catch (error) {
+
+        console.error(
+            "Follow error:",
+            error
+        );
+
+        alert(
+            "Server connection failed."
+        );
+
+
+        if (button) {
+            button.disabled = false;
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   UNREAD NOTIFICATION
+========================================= */
+
+async function loadUnreadCounts() {
+
+    if (!currentUserId) return;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/unread-counts/${encodeURIComponent(
+                    currentUserId
+                )}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+            return;
+        }
+
+
+        const badge =
+            document.getElementById(
+                "notificationBadge"
+            );
+
+
+        if (!badge) return;
+
+
+        const count =
+            Number(
+                data.notifications || 0
+            );
+
+
+        if (count > 0) {
+
+            badge.textContent =
+                count > 99
+                    ? "99+"
+                    : count;
+
+            badge.style.display =
+                "flex";
+
+        } else {
+
+            badge.textContent = "";
+
+            badge.style.display =
+                "none";
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Unread notification error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   MESSAGES
+========================================= */
+
+function openMessages(userId) {
+
+    window.location.href =
+        "messages.html?userId=" +
+        encodeURIComponent(
+            userId
+        );
+
+}
+
+
+/* =========================================
+   EDIT PROFILE
+========================================= */
+
+function editProfile() {
+
+    window.location.href =
+        "edit-profile.html";
+
+}
+
+
+/* =========================================
+   FOLLOWERS
+========================================= */
+
+function openFollowers(userId) {
+
+    window.location.href =
+        `followers.html?userId=${encodeURIComponent(
+            userId
+        )}`;
+
+}
+
+
+/* =========================================
+   FOLLOWING
+========================================= */
+
+function openFollowing(userId) {
+
+    window.location.href =
+        `following.html?userId=${encodeURIComponent(
+            userId
+        )}`;
+
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function formatDate(date) {
+
+    if (!date) return "";
+
+
+    try {
+
+        return new Date(
+            date
+        ).toLocaleString(
+            "en-IN",
+            {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }
+        );
+
+    } catch {
+
+        return "";
+
+    }
+
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+
+        function(character) {
+
+            return {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character];
+
+        }
+    );
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(value);
+
+}
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+function applyDarkMode() {
+
+    const enabled =
+        localStorage.getItem(
+            "connectHubDarkMode"
+        ) === "true";
+
+
+    document.body.classList.toggle(
+        "dark-mode",
+        enabled
+    );
+
+}
+
+
+/* =========================================
+   SHARED POST DEEP LINK
+========================================= */
+
+function openSharedPost() {
+
+    const postId =
+        params.get("postId");
+
+
+    if (!postId) return;
+
+
+    setTimeout(() => {
+
+        const post =
+            document.querySelector(
+                `[data-post-id="${postId}"]`
+            );
+
+
+        if (!post) return;
+
+
+        post.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+
+        post.style.outline =
+            "3px solid #5b5cf0";
+
+
+        setTimeout(() => {
+
+            post.style.outline = "";
+
+        }, 3000);
+
+
+    }, 500);
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+applyDarkMode();
+
+loadProfile();
+
+loadUnreadCounts();
+
+openSharedPost();
+
+
+/* =========================================
+   AUTO REFRESH NOTIFICATION
+========================================= */
+
+setInterval(
+    loadUnreadCounts,
+    5000
+);
+
+</script>
+
+</body>
+</html>

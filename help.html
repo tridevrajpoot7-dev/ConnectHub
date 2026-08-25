@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Help & Support - ConnectHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .support-box {
+            margin-top: 25px;
+        }
+
+        .support-request {
+            background: #f8f9ff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 12px;
+        }
+
+        .support-request strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .support-request p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .support-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .support-date {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .no-support {
+            margin-top: 15px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9ff;
+            border-radius: 12px;
+            color: #777;
+        }
+
+        #supportText {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        .support-send-btn {
+            margin-top: 10px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #5b5cf0;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .support-send-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        ConnectHub
+    </div>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="messages.html">Messages</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="settings.html">⚙️ Settings</a>
+    </nav>
+
+    <div class="nav-buttons">
+        <a href="profile.html">
+            <button class="signup-btn">
+                My Profile
+            </button>
+        </a>
+    </div>
+
+</header>
+
+
+<main class="settings-container">
+
+    <section class="settings-card">
+
+        <a href="settings.html" class="back-link">
+            ← Back to Settings
+        </a>
+
+        <h1>
+            Help & Support ❓
+        </h1>
+
+        <p class="settings-subtitle">
+            Find answers and get help with ConnectHub.
+        </p>
+
+
+        <!-- FAQ -->
+
+        <div class="setting-item">
+
+            <div>
+
+                <strong>
+                    How do I edit my profile?
+                </strong>
+
+                <p>
+                    Open Settings → Account or use Edit Profile
+                    from your profile.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="setting-item">
+
+            <div>
+
+                <strong>
+                    How do I create a post?
+                </strong>
+
+                <p>
+                    Go to Home, write your post and click
+                    Create Post.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="setting-item">
+
+            <div>
+
+                <strong>
+                    How do I change privacy?
+                </strong>
+
+                <p>
+                    Open Settings → Privacy and switch
+                    between Public and Private.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTACT SUPPORT -->
+
+        <div class="setting-item">
+
+            <div>
+
+                <strong>
+                    Contact Support 📩
+                </strong>
+
+                <p>
+                    Need more help? Send a support request.
+                </p>
+
+            </div>
+
+            <button onclick="contactSupport()">
+                Contact
+            </button>
+
+        </div>
+
+
+        <!-- SUPPORT FORM -->
+
+        <div
+            id="supportMessage"
+            style="display:none; margin-top:20px;"
+        >
+
+            <textarea
+                id="supportText"
+                rows="5"
+                placeholder="Describe your problem..."
+            ></textarea>
+
+            <button
+                class="support-send-btn"
+                onclick="sendSupportRequest()"
+            >
+                Send Request
+            </button>
+
+        </div>
+
+
+        <!-- MY SUPPORT REQUESTS -->
+
+        <div class="support-box">
+
+            <h2>
+                My Support Requests 📋
+            </h2>
+
+            <div id="supportRequests">
+
+                <div class="no-support">
+                    Loading support requests...
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* ==========================================
+   CURRENT USER
+========================================== */
+
+const currentUserId =
+    localStorage.getItem("userId");
+
+
+/* ==========================================
+   OPEN SUPPORT FORM
+========================================== */
+
+function contactSupport() {
+
+    const box =
+        document.getElementById(
+            "supportMessage"
+        );
+
+    box.style.display = "block";
+
+    document.getElementById(
+        "supportText"
+    ).focus();
+}
+
+
+/* ==========================================
+   SEND SUPPORT REQUEST
+========================================== */
+
+async function sendSupportRequest() {
+
+    const textarea =
+        document.getElementById(
+            "supportText"
+        );
+
+    const message =
+        textarea.value.trim();
+
+    if (!message) {
+
+        alert(
+            "Please describe your problem."
+        );
+
+        return;
+    }
+
+
+    const userId =
+        localStorage.getItem("userId");
+
+    const name =
+        localStorage.getItem("userName") ||
+        "Unknown User";
+
+    const email =
+        localStorage.getItem("userEmail") ||
+        "";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/support",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            userId
+                                ? Number(userId)
+                                : null,
+
+                        name: name,
+
+                        email: email,
+
+                        message: message
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Support request submit nahi ho paayi."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Support request submitted successfully! ✅"
+        );
+
+
+        textarea.value = "";
+
+        document.getElementById(
+            "supportMessage"
+        ).style.display = "none";
+
+
+        /* Reload requests */
+
+        loadMySupportRequests();
+
+
+    } catch (error) {
+
+        console.error(
+            "Support error:",
+            error
+        );
+
+        alert(
+            "Server se connection nahi ho pa raha."
+        );
+    }
+}
+
+
+/* ==========================================
+   LOAD MY SUPPORT REQUESTS
+========================================== */
+
+async function loadMySupportRequests() {
+
+    const area =
+        document.getElementById(
+            "supportRequests"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/support"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            area.innerHTML = `
+                <div class="no-support">
+                    ❌ Unable to load support requests.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        let requests =
+            data.requests || [];
+
+
+        /*
+         * Sirf current user ki requests
+         */
+
+        if (currentUserId) {
+
+            requests =
+                requests.filter(
+                    request =>
+                        String(
+                            request.userId
+                        ) ===
+                        String(
+                            currentUserId
+                        )
+                );
+
+        }
+
+
+        renderSupportRequests(
+            requests
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Support load error:",
+            error
+        );
+
+        area.innerHTML = `
+            <div class="no-support">
+                ❌ Server connection failed.
+            </div>
+        `;
+    }
+}
+
+
+/* ==========================================
+   RENDER SUPPORT REQUESTS
+========================================== */
+
+function renderSupportRequests(
+    requests
+) {
+
+    const area =
+        document.getElementById(
+            "supportRequests"
+        );
+
+
+    if (!requests.length) {
+
+        area.innerHTML = `
+            <div class="no-support">
+                📭
+                <br><br>
+                You have no support requests yet.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    area.innerHTML =
+        requests.map(
+            request => {
+
+                const date =
+                    request.createdAt
+                        ? new Date(
+                            request.createdAt
+                        ).toLocaleString()
+                        : "";
+
+
+                return `
+
+                    <div class="support-request">
+
+                        <strong>
+                            📩 Support Request
+                        </strong>
+
+                        <p>
+                            ${escapeHtml(
+                                request.message
+                            )}
+                        </p>
+
+                        <span class="support-status">
+                            ${escapeHtml(
+                                request.status ||
+                                "open"
+                            )}
+                        </span>
+
+                        <div class="support-date">
+                            ${escapeHtml(date)}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+}
+
+
+/* ==========================================
+   SECURITY
+========================================== */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        character => {
+
+            return {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character];
+
+        }
+    );
+}
+
+
+/* ==========================================
+   ENTER TO SEND
+========================================== */
+
+document
+    .getElementById("supportText")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendSupportRequest();
+
+            }
+
+        }
+    );
+
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+if (
+    localStorage.getItem(
+        "connectHubDarkMode"
+    ) === "true"
+) {
+
+    document.body.classList.add(
+        "dark-mode"
+    );
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+loadMySupportRequests();
+
+</script>
+
+</body>
+</html>
