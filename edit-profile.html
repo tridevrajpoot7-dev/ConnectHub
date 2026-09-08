@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - ConnectHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">ConnectHub</div>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="messages.html">Messages</a>
+        <a href="notifications.html">Notifications</a>
+    </nav>
+
+    <div class="nav-buttons">
+        <a href="profile.html">
+            <button class="signup-btn">My Profile</button>
+        </a>
+    </div>
+
+</header>
+
+
+<main class="signup-page">
+
+    <div class="signup-card">
+
+        <a href="profile.html" class="back-link">
+            ← Back to Profile
+        </a>
+
+        <h1>Edit Profile ✏️</h1>
+
+        <p class="signup-subtitle">
+            Update your ConnectHub profile.
+        </p>
+
+
+        <form id="editProfileForm">
+<label for="profilePhoto">Profile Photo</label>
+
+<input
+    type="file"
+    id="profilePhoto"
+    accept="image/*"
+>
+            <label for="editName">Name</label>
+
+            <input
+                type="text"
+                id="editName"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <label for="editBio">Bio</label>
+
+            <textarea
+                id="editBio"
+                placeholder="Tell people about yourself..."
+                rows="4"
+            ></textarea>
+
+
+            <label for="editInterests">
+                Interests
+            </label>
+
+            <input
+                type="text"
+                id="editInterests"
+                placeholder="Coding, Gaming, Music..."
+            >
+
+
+            <button
+                type="submit"
+                class="create-account-btn"
+            >
+                Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+<script>
+const savedName = localStorage.getItem("userName") || "";
+const savedBio = localStorage.getItem("userBio") || "";
+const savedInterests = localStorage.getItem("userInterests") || "";
+
+document.getElementById("editName").value = savedName;
+document.getElementById("editBio").value = savedBio;
+document.getElementById("editInterests").value = savedInterests;
+
+document.getElementById("editProfileForm").addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+        const email =
+            localStorage.getItem("userEmail");
+
+        const name =
+            document.getElementById("editName").value.trim();
+
+        const bio =
+            document.getElementById("editBio").value.trim();
+
+        const interests =
+            document.getElementById("editInterests").value.trim();
+
+        if (!email) {
+            alert("Please login first.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+
+            let profilePhotoData = "";
+
+            const photoFile =
+                document.getElementById("profilePhoto").files[0];
+
+            if (photoFile) {
+
+                profilePhotoData = await new Promise(
+                    function (resolve, reject) {
+
+                        const reader = new FileReader();
+
+                        reader.onload = function () {
+                            resolve(reader.result);
+                        };
+
+                        reader.onerror = function () {
+                            reject(
+                                new Error("Photo read failed")
+                            );
+                        };
+
+                        reader.readAsDataURL(photoFile);
+                    }
+                );
+            }
+
+            const response = await fetch("/api/profile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    name: name,
+                    bio: bio,
+                    interests: interests,
+                    profilePhoto: profilePhotoData
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(
+                    data.message ||
+                    "Profile update failed."
+                );
+                return;
+            }
+
+            localStorage.setItem(
+                "userName",
+                data.user.name
+            );
+
+            localStorage.setItem(
+                "userBio",
+                data.user.bio || ""
+            );
+
+            localStorage.setItem(
+                "userInterests",
+                data.user.interests || ""
+            );
+
+            if (profilePhotoData) {
+                localStorage.setItem(
+                    "profilePhoto",
+                    profilePhotoData
+                );
+            }
+
+            alert(
+                "Profile updated successfully! 🎉"
+            );
+
+            window.location.href = "profile.html";
+
+        } catch (error) {
+
+            console.error(
+                "Profile update error:",
+                error
+            );
+
+            alert(
+                "Server se connection nahi ho pa raha."
+            );
+        }
+    }
+);
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+</script>
+
+
+</body>
+</html>

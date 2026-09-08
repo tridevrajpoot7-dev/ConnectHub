@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Discover - ConnectHub</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f8fc;
+            color: #1f2937;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 7%;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #5b5cf0;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #5b5cf0;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 50px 16px 20px;
+
+            border: 1px solid #ddd;
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 15px;
+            background: white;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .search-box input:focus {
+            border-color: #5b5cf0;
+            box-shadow: 0 0 0 3px rgba(91,92,240,0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            font-size: 20px;
+            color: #777;
+
+            pointer-events: none;
+        }
+
+        /* =========================
+           USERS GRID
+        ========================= */
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(280px, 1fr)
+            );
+
+            gap: 20px;
+        }
+
+        /* =========================
+           USER CARD
+        ========================= */
+
+        .user-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            border: 1px solid #eee;
+
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+
+            transition: transform 0.2s,
+                        box-shadow 0.2s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .user-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+        .avatar {
+            width: 65px;
+            height: 65px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            background: #eeeeff;
+
+            border: 2px solid #eeeeff;
+        }
+
+        .user-info {
+            min-width: 0;
+        }
+
+        .user-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email {
+            color: #888;
+            font-size: 12px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bio {
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            min-height: 42px;
+
+            margin-bottom: 18px;
+        }
+
+        /* =========================
+           INTERESTS
+        ========================= */
+
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+
+            margin-bottom: 20px;
+        }
+
+        .interest {
+            background: #f1f1ff;
+
+            color: #5556d9;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+            display: flex;
+
+            gap: 20px;
+
+            border-top: 1px solid #eee;
+
+            padding-top: 15px;
+
+            margin-bottom: 18px;
+        }
+
+        .stat {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .stat strong {
+            color: #222;
+            font-size: 15px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+
+            font-weight: 600;
+
+            border-radius: 9px;
+
+            padding: 11px 15px;
+
+            transition: 0.2s;
+        }
+
+        .follow-btn {
+            flex: 1;
+
+            background: #5b5cf0;
+
+            color: white;
+        }
+
+        .follow-btn:hover {
+            background: #4b4ce0;
+        }
+
+        .following-btn {
+            flex: 1;
+
+            background: #eeeeff;
+
+            color: #5b5cf0;
+        }
+
+        .following-btn:hover {
+            background: #e2e2ff;
+        }
+
+        .profile-btn {
+            background: #f3f4f6;
+
+            color: #333;
+        }
+
+        .profile-btn:hover {
+            background: #e5e7eb;
+        }
+
+        /* =========================
+           LOADING / EMPTY
+        ========================= */
+
+        .status {
+            grid-column: 1 / -1;
+
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #777;
+
+            background: white;
+
+            border-radius: 15px;
+
+            border: 1px solid #eee;
+        }
+
+        .loading {
+            font-size: 15px;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 750px) {
+
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 30px 15px;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                height: auto;
+                min-height: 65px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-links {
+                gap: 8px;
+            }
+
+            .nav-links a {
+                font-size: 0;
+            }
+
+            .nav-links a::first-letter {
+                font-size: 18px;
+            }
+
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .profile-btn {
+                width: 100%;
+            }
+
+        }
+
+        /* ================================
+   PROFESSIONAL DISCOVER
+================================ */
+
+.container h1 {
+    margin-bottom: 8px;
+    font-size: 32px;
+}
+
+.container > p {
+    color: #6b7280;
+    margin-bottom: 22px;
+}
+
+.search {
+    background: white;
+    outline: none;
+    transition: 0.2s;
+}
+
+.search:focus {
+    border-color: #5b5cf0;
+    box-shadow: 0 0 0 3px rgba(91, 92, 240, 0.10);
+}
+
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+}
+
+.card h3 {
+    margin: 5px 0;
+    font-size: 19px;
+}
+
+.card p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.avatar {
+    border: 3px solid #eeeeff;
+}
+
+.follow,
+.following,
+.profile {
+    transition: 0.2s;
+}
+
+.follow:hover {
+    background: #5b5cf0;
+}
+
+.following:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.profile:hover {
+    background: #dddfff;
+}
+
+.message-btn {
+    flex: 1;
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.message-btn:hover {
+    background: #e0e7ff;
+}
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<header class="navbar">
+
+    <div class="logo">
+        ConnectHub
+    </div>
+
+    <nav class="nav-links">
+
+        <a href="home.html">
+            🏠 Home
+        </a>
+
+        <a href="discover.html">
+            🔎 Discover
+        </a>
+
+        <a href="messages.html">
+            💬 Messages
+            <span id="messageCount"></span>
+        </a>
+
+        <a href="notifications.html">
+            🔔 Notifications
+            <span id="notificationCount"></span>
+        </a>
+
+        <a href="settings.html">
+            ⚙️ Settings
+        </a>
+
+    </nav>
+
+    <div class="nav-buttons">
+
+        <a href="profile.html">
+            <button class="signup-btn">
+                👤 My Profile
+            </button>
+        </a>
+
+    </div>
+
+</header>
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="container">
+
+
+    <div class="page-header">
+
+        <h1>
+            Discover People
+        </h1>
+
+        <p>
+            Find new people and connect with them on ConnectHub.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Search by name, email or interests..."
+            autocomplete="off"
+        >
+
+        <span class="search-icon">
+            🔍
+        </span>
+
+    </div>
+
+
+    <!-- USERS -->
+
+    <div
+        id="users"
+        class="users-grid"
+    >
+
+        <div class="status loading">
+            Loading users...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+
+/* =========================================
+   CURRENT USER
+========================================= */
+
+const currentUserId =
+    localStorage.getItem("userId");
+
+
+/* =========================================
+   LOGIN CHECK
+========================================= */
+
+if (!currentUserId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const searchInput =
+    document.getElementById("search");
+
+const usersBox =
+    document.getElementById("users");
+
+
+/* =========================================
+   LOAD USERS
+========================================= */
+
+let searchTimer;
+
+
+async function loadUsers() {
+
+    const q =
+        searchInput.value.trim();
+
+
+    usersBox.innerHTML = `
+        <div class="status loading">
+            🔄 Loading users...
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/users?search=" +
+                encodeURIComponent(q) +
+                "&currentUserId=" +
+                encodeURIComponent(currentUserId)
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            usersBox.innerHTML = `
+                <div class="status error">
+                    Unable to load users.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        renderUsers(
+            data.users || []
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Discover error:",
+            error
+        );
+
+
+        usersBox.innerHTML = `
+            <div class="status error">
+                ❌ Server se connection nahi ho pa raha.
+                <br><br>
+                Make sure your Node.js server is running.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER USERS
+========================================= */
+
+function renderUsers(users) {
+
+
+    if (!users.length) {
+
+        usersBox.innerHTML = `
+            <div class="status">
+                🔍
+                <br><br>
+                No users found.
+                <br>
+                Try another name, email or interest.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    usersBox.innerHTML =
+        users.map(user => {
+
+
+            const photo =
+                user.profilePhoto ||
+                "https://via.placeholder.com/100";
+
+
+            const following =
+                Boolean(
+                    user.isFollowing
+                );
+
+
+            const buttonClass =
+                following
+                    ? "following-btn"
+                    : "follow-btn";
+
+
+            const buttonText =
+                following
+                    ? "✓ Following"
+                    : "+ Follow";
+
+
+            const interests =
+                Array.isArray(
+                    user.interests
+                )
+                    ? user.interests
+                    : [];
+
+
+            const interestHTML =
+                interests.length
+
+                    ? interests
+                        .slice(0, 4)
+                        .map(
+                            interest =>
+                                `<span class="interest">
+                                    ${escapeHtml(interest)}
+                                </span>`
+                        )
+                        .join("")
+
+                    : "";
+
+
+            return `
+
+                <div class="user-card">
+
+                    <div class="user-top">
+
+                        <img
+                            class="avatar"
+                            src="${escapeAttribute(photo)}"
+                            alt="Profile Photo"
+                            onerror="
+                                this.src='https://via.placeholder.com/100'
+                            "
+                        >
+
+                        <div class="user-info">
+
+                            <h3>
+                                ${escapeHtml(
+                                    user.name ||
+                                    "Unknown User"
+                                )}
+                            </h3>
+
+                            <div class="email">
+                                ${escapeHtml(
+                                    user.email ||
+                                    ""
+                                )}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <p class="bio">
+
+                        ${escapeHtml(
+                            user.bio ||
+                            "No bio yet."
+                        )}
+
+                    </p>
+
+
+                    <div class="interests">
+
+                        ${interestHTML}
+
+                    </div>
+
+
+                    <div class="stats">
+
+                        <div class="stat">
+
+                            <strong>
+                                ${Number(
+                                    user.followers || 0
+                                )}
+                            </strong>
+
+                            Followers
+
+                        </div>
+
+
+                        <div class="stat">
+
+                            <strong>
+                                ${Number(
+                                    user.following || 0
+                                )}
+                            </strong>
+
+                            Following
+
+                        </div>
+
+
+                        <div class="stat">
+
+                            <strong>
+                                ${Number(
+                                    user.posts || 0
+                                )}
+                            </strong>
+
+                            Posts
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <button
+                            class="${buttonClass}"
+                            onclick="toggleFollow(${Number(user.id)}, ${following})"
+                        >
+                            ${buttonText}
+                        </button>
+
+                        <button
+                            class="profile-btn"
+                            onclick="openProfile(${Number(user.id)})"
+                        >
+                            👤 Profile
+                        </button>
+
+                        <button
+                            class="message-btn"
+                            onclick="openMessage(${Number(user.id)})"
+                        >
+                            💬 Message
+                        </button>
+
+                    </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================
+   FOLLOW / UNFOLLOW
+========================================= */
+
+async function toggleFollow(
+    targetUserId,
+    isFollowing
+) {
+
+
+    if (!currentUserId) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    if (
+        String(targetUserId) ===
+        String(currentUserId)
+    ) {
+
+        return;
+
+    }
+
+
+    const endpoint =
+        isFollowing
+
+            ? `/api/users/${targetUserId}/unfollow`
+
+            : `/api/users/${targetUserId}/follow`;
+
+
+    try {
+
+        const response =
+            await fetch(
+                endpoint,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        userId:
+                            Number(
+                                currentUserId
+                            )
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Follow action failed."
+            );
+
+            return;
+
+        }
+
+
+        /* Refresh users */
+
+        await loadUsers();
+
+
+    } catch (error) {
+
+        console.error(
+            "Follow error:",
+            error
+        );
+
+
+        alert(
+            "Server se connection nahi ho pa raha."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   VIEW PROFILE
+========================================= */
+
+function openProfile(userId) {
+
+    window.location.href =
+        "profile.html?userId=" +
+        encodeURIComponent(userId);
+
+}
+
+/* =========================================
+   OPEN MESSAGE
+========================================= */
+
+function openMessage(userId) {
+
+    if (!userId) {
+        alert("User ID nahi mila.");
+        return;
+    }
+
+    window.location.href =
+        "messages.html?userId=" +
+        encodeURIComponent(userId);
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+searchInput.addEventListener(
+    "input",
+    function () {
+
+        clearTimeout(
+            searchTimer
+        );
+
+
+        searchTimer =
+            setTimeout(
+                loadUsers,
+                300
+            );
+
+    }
+);
+
+
+/* =========================================
+   HTML SECURITY
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        function (character) {
+
+            return {
+
+                "&": "&amp;",
+
+                "<": "&lt;",
+
+                ">": "&gt;",
+
+                '"': "&quot;",
+
+                "'": "&#039;"
+
+            }[character];
+
+        }
+    );
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHtml(
+        value
+    );
+
+}
+
+
+/* =========================================
+   INITIAL LOAD
+========================================= */
+
+/* =========================================
+   NAVBAR UNREAD COUNTS
+========================================= */
+
+async function loadUnreadCounts() {
+
+    if (!currentUserId) return;
+
+    try {
+
+        const response = await fetch(
+            "/api/unread-counts/" +
+            encodeURIComponent(currentUserId)
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) return;
+
+        const messageCount =
+            document.getElementById("messageCount");
+
+        const notificationCount =
+            document.getElementById("notificationCount");
+
+
+        if (messageCount) {
+
+            messageCount.textContent =
+                data.messages > 0
+                    ? `(${data.messages})`
+                    : "";
+
+        }
+
+
+        if (notificationCount) {
+
+            notificationCount.textContent =
+                data.notifications > 0
+                    ? `(${data.notifications})`
+                    : "";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Unread count error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* Initial count */
+
+loadUnreadCounts();
+
+
+/* Refresh every 5 seconds */
+
+setInterval(
+    loadUnreadCounts,
+    5000
+);
+
+loadUsers();
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+(function () {
+    const darkMode =
+        localStorage.getItem("connectHubDarkMode") === "true";
+
+    if (darkMode) {
+        document.body.classList.add("dark-mode");
+    }
+})();
+</script>
+</body>
+
+</html>

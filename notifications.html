@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Notifications - ConnectHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        body {
+            background: #f4f6f8;
+        }
+
+        .notifications-container {
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .notifications-header h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #111827;
+        }
+
+        .mark-all-btn {
+            border: none;
+            background: #111827;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .mark-all-btn:hover {
+            background: #5b5cf0;
+            transform: translateY(-1px);
+        }
+
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.06);
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s,
+                background 0.15s,
+                box-shadow 0.15s;
+
+            overflow: hidden;
+        }
+
+        .notification:hover {
+            transform: translateY(-1px);
+            background: #fafafa;
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.09);
+        }
+
+        .notification.unread {
+            background: #eef4ff;
+
+            border-left:
+                4px solid #2563eb;
+
+            box-shadow:
+                0 6px 20px rgba(37, 99, 235, 0.10);
+        }
+
+        .notification-photo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e5e7eb;
+            flex-shrink: 0;
+
+            border:
+                2px solid #eeeeff;
+        }
+
+        .notification-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+
+            margin-left: -25px;
+            margin-top: 30px;
+
+            background: white;
+
+            box-shadow:
+                0 2px 6px rgba(0, 0, 0, 0.15);
+
+            z-index: 2;
+
+            transition:
+                transform 0.2s;
+        }
+
+        .notification:hover .notification-icon {
+            transform: scale(1.08);
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-text {
+            margin: 0;
+            font-size: 15px;
+            color: #111827;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .notification-text strong {
+            font-weight: 700;
+        }
+
+        .notification-time {
+            margin-top: 5px;
+            color: #6b7280;
+            font-size: 13px;
+
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notification-time::before {
+            content: "🕐";
+            font-size: 11px;
+        }
+
+        .unread-dot {
+            width: 9px;
+            height: 9px;
+
+            background: #2563eb;
+
+            border-radius: 50%;
+
+            flex-shrink: 0;
+        }
+
+        .empty-notifications {
+            background: white;
+            padding: 50px 20px;
+            text-align: center;
+
+            border-radius: 16px;
+
+            color: #6b7280;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-notifications .emoji {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .empty-notifications h3 {
+            margin: 8px 0;
+            color: #374151;
+        }
+
+        .empty-notifications p {
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .notification-count {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-width: 20px;
+            height: 20px;
+
+            padding: 0 6px;
+            margin-left: 5px;
+
+            background: #ef4444;
+            color: white;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            vertical-align: middle;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .notifications-container {
+                margin: 15px auto;
+                padding: 15px;
+            }
+
+            .notifications-header {
+                align-items: center;
+            }
+
+            .notifications-header h1 {
+                font-size: 24px;
+            }
+
+            .mark-all-btn {
+                padding: 9px 12px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .notification {
+                padding: 13px;
+                gap: 10px;
+            }
+
+            .notification-photo {
+                width: 45px;
+                height: 45px;
+            }
+
+            .notification-icon {
+                width: 26px;
+                height: 26px;
+                font-size: 14px;
+                margin-left: -22px;
+                margin-top: 27px;
+            }
+
+            .notification-text {
+                font-size: 14px;
+            }
+
+            .notification-time {
+                font-size: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        ConnectHub
+    </div>
+
+
+    <nav>
+
+        <a href="home.html">
+            Home
+        </a>
+
+        <a href="discover.html">
+            Discover
+        </a>
+
+        <a href="messages.html">
+            💬 Messages
+        </a>
+
+        <a href="notifications.html">
+
+            🔔 Notifications
+
+            <span
+                id="notificationCount"
+                style="display:none;"
+            ></span>
+
+        </a>
+
+        <a href="settings.html">
+            ⚙️ Settings
+        </a>
+
+    </nav>
+
+
+    <div class="nav-buttons">
+
+        <a href="profile.html">
+
+            <button class="signup-btn">
+                My Profile
+            </button>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<main class="notifications-container">
+
+
+    <div class="notifications-header">
+
+        <h1>
+            Notifications 🔔
+        </h1>
+
+        <button
+            class="mark-all-btn"
+            id="markAllBtn"
+            onclick="markAllRead()"
+        >
+            Mark all as read
+        </button>
+
+    </div>
+
+
+    <div
+        id="notificationList"
+        class="notification-list"
+    >
+
+        <div class="empty-notifications">
+
+            <div class="emoji">
+                🔔
+            </div>
+
+            Loading notifications...
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+
+<script>
+
+/* =========================================
+   CURRENT USER
+========================================= */
+
+const currentUserId =
+    localStorage.getItem("userId");
+
+
+if (!currentUserId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================
+   GET NOTIFICATION ICON
+========================================= */
+
+function getIcon(type) {
+
+    switch (type) {
+
+        case "follow":
+            return "🤝";
+
+        case "like":
+            return "❤️";
+
+        case "comment":
+            return "💬";
+
+        case "share":
+            return "📤";
+
+        case "message":
+            return "✉️";
+
+        default:
+            return "🔔";
+
+    }
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[character];
+
+            }
+        );
+
+}
+
+
+/* =========================================
+   TIME AGO
+========================================= */
+
+function timeAgo(dateString) {
+
+    if (!dateString) {
+        return "Recently";
+    }
+
+    const date =
+        new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+        return "Recently";
+    }
+
+    const now =
+        new Date();
+
+    const seconds =
+        Math.floor(
+            (now - date) / 1000
+        );
+
+
+    if (seconds < 10) {
+        return "Just now";
+    }
+
+
+    if (seconds < 60) {
+
+        return (
+            seconds +
+            (
+                seconds === 1
+                    ? " second ago"
+                    : " seconds ago"
+            )
+        );
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    if (minutes < 60) {
+
+        return (
+            minutes +
+            (
+                minutes === 1
+                    ? " minute ago"
+                    : " minutes ago"
+            )
+        );
+
+    }
+
+
+    const hours =
+        Math.floor(
+            minutes / 60
+        );
+
+
+    if (hours < 24) {
+
+        return (
+            hours +
+            (
+                hours === 1
+                    ? " hour ago"
+                    : " hours ago"
+            )
+        );
+
+    }
+
+
+    const days =
+        Math.floor(
+            hours / 24
+        );
+
+
+    if (days < 7) {
+
+        return (
+            days +
+            (
+                days === 1
+                    ? " day ago"
+                    : " days ago"
+            )
+        );
+
+    }
+
+
+    return date.toLocaleDateString();
+
+}
+
+
+/* =========================================
+   LOAD NOTIFICATIONS
+========================================= */
+
+async function loadNotifications() {
+
+    if (!currentUserId) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/notifications/" +
+                encodeURIComponent(
+                    currentUserId
+                )
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Notifications load failed"
+            );
+
+        }
+
+
+        renderNotifications(
+            data.notifications || []
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Notification error:",
+            error
+        );
+
+
+        document.getElementById(
+            "notificationList"
+        ).innerHTML = `
+
+            <div class="empty-notifications">
+
+                <div class="emoji">
+                    ⚠️
+                </div>
+
+                <h3>
+                    Notifications load nahi ho pa rahi
+                </h3>
+
+                <p>
+                    Server se connection check karo
+                    aur page refresh karo.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER NOTIFICATIONS
+========================================= */
+
+function renderNotifications(
+    notifications
+) {
+
+    const list =
+        document.getElementById(
+            "notificationList"
+        );
+
+
+    const count =
+        document.getElementById(
+            "notificationCount"
+        );
+
+
+    /*
+     * UNREAD COUNT
+     */
+
+    const unreadCount =
+        notifications.filter(
+            function(notification) {
+
+                return !notification.read;
+
+            }
+        ).length;
+
+
+    /*
+     * NAVBAR BADGE
+     */
+
+    if (unreadCount > 0) {
+
+        count.textContent =
+            unreadCount > 99
+                ? "99+"
+                : unreadCount;
+
+        count.className =
+            "notification-count";
+
+        count.style.display =
+            "inline-flex";
+
+    } else {
+
+        count.textContent =
+            "";
+
+        count.style.display =
+            "none";
+
+    }
+
+
+    /*
+     * EMPTY
+     */
+
+    if (!notifications.length) {
+
+        list.innerHTML = `
+
+            <div class="empty-notifications">
+
+                <div class="emoji">
+                    🔔
+                </div>
+
+                <h3>
+                    No notifications yet
+                </h3>
+
+                <p>
+                    When someone follows,
+                    likes, comments,
+                    shares or messages
+                    you, it will appear here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+     * NOTIFICATION CARDS
+     */
+
+    list.innerHTML =
+        notifications
+            .map(
+                function(notification) {
+
+                    const user =
+                        notification.fromUser || {};
+
+
+                    const senderName =
+                        user.name ||
+                        "Someone";
+
+
+                    const senderPhoto =
+                        user.profilePhoto ||
+                        "";
+
+
+                    const icon =
+                        getIcon(
+                            notification.type
+                        );
+
+
+                    const unreadClass =
+                        notification.read
+                            ? ""
+                            : "unread";
+
+
+                    const fromUserId =
+                        Number(
+                            notification.fromUserId || 0
+                        );
+
+
+                    const postId =
+                        Number(
+                            notification.postId || 0
+                        );
+
+
+                    return `
+
+                        <div
+                            class="notification ${unreadClass}"
+                            onclick="openNotification(
+                                ${Number(notification.id)},
+                                '${escapeHtml(notification.type)}',
+                                ${fromUserId},
+                                ${postId}
+                            )"
+                        >
+
+
+                            ${
+                                senderPhoto
+
+                                ? `
+
+                                    <img
+                                        class="notification-photo"
+                                        src="${escapeHtml(senderPhoto)}"
+                                        alt="Profile"
+                                        onerror="this.style.display='none'"
+                                    >
+
+                                `
+
+                                : `
+
+                                    <div
+                                        class="notification-photo"
+                                        style="
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            font-size:25px;
+                                        "
+                                    >
+                                        👤
+                                    </div>
+
+                                `
+                            }
+
+
+                            <div class="notification-icon">
+
+                                ${icon}
+
+                            </div>
+
+
+                            <div class="notification-content">
+
+                                <p class="notification-text">
+
+                                    <strong>
+                                        ${escapeHtml(senderName)}
+                                    </strong>
+
+                                    ${escapeHtml(
+                                        notification.text ||
+                                        ""
+                                    )}
+
+                                </p>
+
+
+                                <div class="notification-time">
+
+                                    ${timeAgo(
+                                        notification.createdAt
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            ${
+                                notification.read
+                                    ? ""
+                                    : `
+                                        <div
+                                            class="unread-dot"
+                                            title="Unread"
+                                        ></div>
+                                    `
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================
+   OPEN NOTIFICATION
+========================================= */
+
+async function openNotification(
+    notificationId,
+    type,
+    fromUserId,
+    postId
+) {
+
+    /*
+     * First mark as read
+     */
+
+    try {
+
+        await fetch(
+            "/api/notifications/" +
+            notificationId +
+            "/read",
+            {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    userId:
+                        Number(
+                            currentUserId
+                        )
+
+                })
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Read notification error:",
+            error
+        );
+
+    }
+
+
+    /*
+     * FOLLOW
+     */
+
+    if (
+        type === "follow" &&
+        fromUserId
+    ) {
+
+        window.location.href =
+            "profile.html?userId=" +
+            encodeURIComponent(
+                fromUserId
+            );
+
+        return;
+
+    }
+
+
+    /*
+     * MESSAGE
+     */
+
+    if (
+        type === "message" &&
+        fromUserId
+    ) {
+
+        window.location.href =
+            "messages.html?userId=" +
+            encodeURIComponent(
+                fromUserId
+            );
+
+        return;
+
+    }
+
+
+    /*
+     * LIKE / COMMENT / SHARE
+     */
+
+    if (
+        type === "like" ||
+        type === "comment" ||
+        type === "share"
+    ) {
+
+        /*
+         * Agar future mein
+         * postId ke saath direct post
+         * open karna ho to yahan
+         * add kar sakte hain.
+         */
+
+        window.location.href =
+            "home.html";
+
+        return;
+
+    }
+
+
+    /*
+     * Refresh
+     */
+
+    await loadNotifications();
+
+}
+
+
+/* =========================================
+   MARK ALL AS READ
+========================================= */
+
+async function markAllRead() {
+
+    const button =
+        document.getElementById(
+            "markAllBtn"
+        );
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "Marking...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/notifications/" +
+                encodeURIComponent(
+                    currentUserId
+                ) +
+                "/read-all",
+                {
+                    method: "PUT"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            response.ok &&
+            data.success
+        ) {
+
+            await loadNotifications();
+
+        } else {
+
+            alert(
+                data.message ||
+                "Notifications mark nahi ho paayi."
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Mark all error:",
+            error
+        );
+
+        alert(
+            "Server se connection nahi ho pa raha."
+        );
+
+    } finally {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Mark all as read";
+
+    }
+
+}
+
+
+/* =========================================
+   AUTO REFRESH
+========================================= */
+
+setInterval(
+    function() {
+
+        loadNotifications();
+
+    },
+    5000
+);
+
+
+/* =========================================
+   START
+========================================= */
+
+loadNotifications();
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+
+(function () {
+    const darkMode =
+        localStorage.getItem("connectHubDarkMode") === "true";
+
+    if (darkMode) {
+        document.body.classList.add("dark-mode");
+    }
+})();
+</script>
+</body>
+
+</html>

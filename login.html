@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ConnectHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="signup-page">
+
+        <div class="signup-card">
+
+            <a href="index.html" class="back-link">
+                ← Back to ConnectHub
+            </a>
+
+            <h1>Welcome Back 👋</h1>
+
+            <p class="signup-subtitle">
+                Login to continue to ConnectHub.
+            </p>
+
+            <form id="loginForm">
+
+                <label for="loginEmail">Email</label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="loginPassword">Password</label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="create-account-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+            <p class="login-text">
+                Don't have an account?
+                <a href="signup.html">Create Account</a>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+
+        if (!loginForm) {
+            console.error("loginForm not found.");
+            return;
+        }
+
+
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const loginEmail =
+                    document
+                        .getElementById("loginEmail")
+                        .value
+                        .trim();
+
+
+                const loginPassword =
+                    document
+                        .getElementById("loginPassword")
+                        .value;
+
+
+                try {
+
+                    const response =
+                        await fetch("/api/login", {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email: loginEmail,
+                                password: loginPassword
+                            })
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        alert(
+                            data.message ||
+                            "Login failed."
+                        );
+
+                        return;
+                    }
+// Save complete logged-in user
+localStorage.setItem(
+    "user",
+    JSON.stringify(data.user)
+);
+
+// Keep old values too, so existing ConnectHub pages
+// continue working
+localStorage.setItem("userId", data.user.id);
+localStorage.setItem("userName", data.user.name);
+localStorage.setItem("userEmail", data.user.email);
+localStorage.setItem("userAge", data.user.age);
+localStorage.setItem(
+    "userInterests",
+    Array.isArray(data.user.interests)
+        ? data.user.interests.join(", ")
+        : data.user.interests || ""
+);
+localStorage.setItem("userLoggedIn", "true");
+
+
+                    alert(
+                        "Login successful! 🎉"
+                    );
+
+
+                    window.location.href =
+                        "profile.html";
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+                    alert(
+                        "Server se connection nahi ho pa raha."
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - ConnectHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="signup-page">
+
+        <div class="signup-card">
+
+            <a href="index.html" class="back-link">
+                ← Back to ConnectHub
+            </a>
+
+            <h1>Create your account</h1>
+
+            <p class="signup-subtitle">
+                Join ConnectHub and discover people with similar interests.
+            </p>
+
+            <form id="signupForm">
+
+                <label for="name">Full Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create a password"
+                    minlength="6"
+                    required
+                >
+
+                <label for="age">Age</label>
+
+                <input
+                    type="number"
+                    id="age"
+                    placeholder="Enter your age"
+                    min="13"
+                    required
+                >
+
+                <label>Choose your interests</label>
+
+                <div class="interest-options">
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="Gaming"
+                        >
+                        🎮 Gaming
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="Coding"
+                        >
+                        💻 Coding
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="Music"
+                        >
+                        🎵 Music
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="Sports"
+                        >
+                        ⚽ Sports
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="Movies"
+                        >
+                        🎬 Movies
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="Study"
+                        >
+                        📚 Study
+                    </label>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="create-account-btn"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="login-text">
+                Already have an account?
+                <a href="login.html">Login</a>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const signupForm =
+            document.getElementById("signupForm");
+
+
+        signupForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document
+                        .getElementById("name")
+                        .value
+                        .trim();
+
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                const age =
+                    document
+                        .getElementById("age")
+                        .value;
+
+
+                const interests =
+                    Array.from(
+                        document.querySelectorAll(
+                            '.interest-options input[type="checkbox"]:checked'
+                        )
+                    ).map(function (checkbox) {
+                        return checkbox.value;
+                    });
+
+
+                try {
+
+                    const response =
+                        await fetch("/api/signup", {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                name,
+                                email,
+                                password,
+                                age,
+                                interests
+                            })
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        alert(
+                            data.message ||
+                            "Account creation failed."
+                        );
+
+                        return;
+                    }
+
+                    localStorage.setItem(
+                        "userId",
+                         data.user.id
+                    );
+
+                    localStorage.setItem(
+                        "userName",
+                        data.user.name
+                    );
+
+                    localStorage.setItem(
+                        "userEmail",
+                        data.user.email
+                    );
+
+                    localStorage.setItem(
+                        "userAge",
+                        data.user.age
+                    );
+
+                    localStorage.setItem(
+                        "userInterests",
+                        data.user.interests.join(", ")
+                    );
+
+                    localStorage.setItem(
+                        "userLoggedIn",
+                        "true"
+                    );
+
+
+                    alert(
+                        "Account created successfully! 🎉"
+                    );
+
+
+                    window.location.href =
+                        "profile.html";
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Signup error:",
+                        error
+                    );
+
+                    alert(
+                        "Server se connection nahi ho pa raha."
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+    </script>
+
+</body>
+</html>

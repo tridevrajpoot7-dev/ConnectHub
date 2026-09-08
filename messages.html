@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Messages - ConnectHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .chat-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            max-width: 1100px;
+            height: 650px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px #00000012;
+        }
+
+        /* =========================
+           CHAT LIST
+        ========================= */
+
+        .chat-list {
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .chat-list h2 {
+            padding: 20px;
+            margin: 0;
+        }
+
+        .chat-search {
+            padding: 0 15px 15px;
+        }
+
+        .chat-search input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            outline: none;
+            font-size: 13px;
+            background: #f8fafc;
+        }
+
+        .chat-search input:focus {
+            border-color: #5b5cf0;
+        }
+
+        .chat-search-count {
+            padding: 0 15px 10px;
+            color: #888;
+            font-size: 11px;
+        }
+
+        .chat-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .chat-user:hover {
+            background: #f8fafc;
+        }
+
+        .chat-user.active {
+            background: #eef2ff;
+        }
+
+        .chat-user.unread {
+            background: #f0f7ff;
+        }
+
+        .chat-user strong {
+            font-size: 14px;
+        }
+
+        .chat-user p {
+            margin: 5px 0 0;
+            color: #777;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .chat-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .unread-message-dot {
+            width: 9px;
+            height: 9px;
+            background: #2563eb;
+            border-radius: 50%;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* =========================
+           CHAT WINDOW
+        ========================= */
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            background: white;
+        }
+
+        .chat-header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        .chat-header p {
+            margin: 3px 0 0;
+            color: #22c55e;
+            font-size: 13px;
+        }
+
+        .back-discover-btn {
+            display: none;
+            border: 0;
+            background: #f3f4f6;
+            color: #374151;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* =========================
+           MESSAGES
+        ========================= */
+
+        .messages-area {
+            flex: 1;
+            min-height: 0;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            border-radius: 14px;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .message.received {
+            background: white;
+            margin-right: auto;
+        }
+
+        .message.sent {
+            background: #111827;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message-time {
+            display: block;
+            font-size: 10px;
+            opacity: .6;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           MESSAGE INPUT
+        ========================= */
+
+        .message-input {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            width: 100%;
+            flex-shrink: 0;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .message-input input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        .message-input input:focus {
+            border-color: #5b5cf0;
+            box-shadow: 0 0 0 3px rgba(91,92,240,.08);
+        }
+
+        .message-input input:disabled {
+            background: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+        .message-input button {
+            border: 0;
+            background: #111827;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message-input button:hover:not(:disabled) {
+            background: #000;
+        }
+
+        .message-input button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+        .chat-empty-search {
+            text-align: center;
+            color: #888;
+            padding: 25px 15px;
+            font-size: 13px;
+        }
+
+        /* =========================
+           MESSAGE BADGE
+        ========================= */
+
+        .message-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            margin-left: 5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .back-discover-btn {
+                display: block;
+            }
+
+            .chat-container {
+                grid-template-columns: 1fr;
+                height: calc(100vh - 100px);
+                margin: 15px;
+            }
+
+            .chat-list {
+                max-height: 250px;
+                border-right: 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .chat-window {
+                min-height: 450px;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .message-input {
+                padding: 10px;
+            }
+
+            .message-input button {
+                padding: 12px 15px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<header class="navbar">
+
+    <div class="logo">
+        ConnectHub
+    </div>
+
+    <nav>
+
+        <a href="home.html">
+            Home
+        </a>
+
+        <a href="discover.html">
+            Discover
+        </a>
+
+        <a href="messages.html">
+
+            💬 Messages
+
+            <span
+                id="messageCount"
+                class="message-count"
+                style="display:none;"
+            ></span>
+
+        </a>
+
+        <a href="notifications.html">
+            Notifications
+        </a>
+
+        <a href="settings.html">
+            ⚙️ Settings
+        </a>
+
+    </nav>
+
+    <div class="nav-buttons">
+
+        <a href="profile.html">
+
+            <button class="signup-btn">
+                My Profile
+            </button>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN CHAT
+========================= -->
+
+<main class="chat-container">
+
+
+    <!-- =========================
+         CHAT LIST
+    ========================= -->
+
+    <section class="chat-list">
+
+        <h2>
+            Messages
+        </h2>
+
+        <div class="chat-search">
+
+            <input
+                type="text"
+                id="chatSearch"
+                placeholder="🔍 Search users..."
+                autocomplete="off"
+            >
+
+        </div>
+
+        <div
+            id="chatSearchCount"
+            class="chat-search-count"
+        ></div>
+
+        <div id="chatUsers">
+
+            <p class="empty">
+                Loading users...
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CHAT WINDOW
+    ========================= -->
+
+    <section class="chat-window">
+
+
+        <!-- HEADER -->
+
+        <div class="chat-header">
+
+            <button
+                type="button"
+                class="back-discover-btn"
+                onclick="window.location.href='discover.html'"
+            >
+                ←
+            </button>
+
+            <div
+                class="chat-avatar"
+                id="chatAvatar"
+            >
+                👤
+            </div>
+
+            <div>
+
+                <strong id="chatName">
+                    Select a user
+                </strong>
+
+                <p id="chatStatus">
+                    ConnectHub
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        <div
+            class="messages-area"
+            id="messagesArea"
+        >
+
+            <p class="empty">
+                Select someone to start chatting.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             MESSAGE INPUT
+        ========================= -->
+
+        <div
+            class="message-input"
+            id="messageInputBox"
+        >
+
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Select a user to start messaging..."
+                autocomplete="off"
+                disabled
+            >
+
+            <button
+                type="button"
+                id="sendButton"
+                onclick="sendMessage()"
+                disabled
+            >
+                Send
+            </button>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   CURRENT USER
+===================================================== */
+
+const currentUserId =
+    localStorage.getItem("userId");
+
+
+if (!currentUserId) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let selectedUser = null;
+
+let allChatUsers = [];
+
+let unreadCounts = {};
+
+let isSending = false;
+
+
+/* =====================================================
+   URL USER
+===================================================== */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const requestedUserId =
+    urlParams.get("userId");
+
+
+/* =====================================================
+   DOM
+===================================================== */
+
+const chatUsersBox =
+    document.getElementById(
+        "chatUsers"
+    );
+
+const chatSearch =
+    document.getElementById(
+        "chatSearch"
+    );
+
+const chatSearchCount =
+    document.getElementById(
+        "chatSearchCount"
+    );
+
+const messageCount =
+    document.getElementById(
+        "messageCount"
+    );
+
+const messageInput =
+    document.getElementById(
+        "messageInput"
+    );
+
+const sendButton =
+    document.getElementById(
+        "sendButton"
+    );
+
+const messageInputBox =
+    document.getElementById(
+        "messageInputBox"
+    );
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        function(character) {
+
+            return {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character];
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   ENABLE / DISABLE MESSAGE BOX
+===================================================== */
+
+function enableMessageBox() {
+
+    messageInputBox.style.display =
+        "flex";
+
+    messageInputBox.style.visibility =
+        "visible";
+
+    messageInputBox.style.opacity =
+        "1";
+
+    messageInput.disabled =
+        false;
+
+    sendButton.disabled =
+        false;
+
+    messageInput.placeholder =
+        "Write a message...";
+
+}
+
+
+function disableMessageBox() {
+
+    messageInputBox.style.display =
+        "flex";
+
+    messageInputBox.style.visibility =
+        "visible";
+
+    messageInputBox.style.opacity =
+        "1";
+
+    messageInput.disabled =
+        true;
+
+    sendButton.disabled =
+        true;
+
+    messageInput.placeholder =
+        "Select a user to start messaging...";
+
+}
+
+
+/* =====================================================
+   LOAD USERS
+===================================================== */
+
+async function loadUsers() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/users?currentUserId=" +
+                encodeURIComponent(
+                    currentUserId
+                )
+            );
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            chatUsersBox.innerHTML =
+                '<p class="empty">Users load nahi ho rahe.</p>';
+
+            return;
+
+        }
+
+
+        allChatUsers =
+            (data.users || []).filter(
+                function(user) {
+
+                    return String(user.id) !==
+                        String(currentUserId);
+
+                }
+            );
+
+
+        renderUsers(
+            allChatUsers
+        );
+
+
+        /* Open requested user */
+
+        if (requestedUserId) {
+
+            const userExists =
+                allChatUsers.some(
+                    function(user) {
+
+                        return String(user.id) ===
+                            String(requestedUserId);
+
+                    }
+                );
+
+
+            if (userExists) {
+
+                await openChat(
+                    Number(requestedUserId)
+                );
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Users error:",
+            error
+        );
+
+        chatUsersBox.innerHTML =
+            '<p class="empty">Server error.</p>';
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER USERS
+===================================================== */
+
+function renderUsers(users) {
+
+    const total =
+        allChatUsers.length;
+
+    const shown =
+        users.length;
+
+
+    chatSearchCount.textContent =
+        total
+            ? `Showing ${shown} of ${total} users`
+            : "";
+
+
+    if (!users.length) {
+
+        chatUsersBox.innerHTML =
+            '<p class="chat-empty-search">🔍 No users found.</p>';
+
+        return;
+
+    }
+
+
+    chatUsersBox.innerHTML =
+        users.map(
+            function(user) {
+
+                const photo =
+                    user.profilePhoto || "";
+
+
+                const unread =
+                    Number(
+                        unreadCounts[
+                            Number(user.id)
+                        ] || 0
+                    );
+
+
+                const isActive =
+                    selectedUser &&
+                    String(selectedUser.id) ===
+                    String(user.id);
+
+
+                return `
+
+                    <div
+                        class="chat-user
+                        ${unread > 0 ? "unread" : ""}
+                        ${isActive ? "active" : ""}"
+                        id="chat-user-${Number(user.id)}"
+                        onclick="openChat(${Number(user.id)})"
+                    >
+
+                        <div class="chat-avatar">
+
+                            ${
+                                photo
+
+                                    ? `<img
+                                        src="${escapeHtml(photo)}"
+                                        alt="Profile"
+                                        onerror="this.style.display='none'"
+                                      >`
+
+                                    : "👤"
+                            }
+
+                        </div>
+
+
+                        <div
+                            style="
+                                flex:1;
+                                min-width:0;
+                            "
+                        >
+
+                            <strong>
+                                ${escapeHtml(
+                                    user.name ||
+                                    "User"
+                                )}
+                            </strong>
+
+                            <p>
+                                ${escapeHtml(
+                                    user.bio ||
+                                    "Start a conversation"
+                                )}
+                            </p>
+
+                        </div>
+
+
+                        ${
+                            unread > 0
+
+                                ? `
+                                    <div
+                                        class="unread-message-dot"
+                                        title="${unread} unread message${unread > 1 ? "s" : ""}"
+                                    ></div>
+                                  `
+
+                                : ""
+                        }
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* =====================================================
+   LOAD UNREAD COUNTS
+===================================================== */
+
+async function loadUnreadCounts() {
+
+    if (!currentUserId) {
+        return;
+    }
+
+    try {
+
+        /* ==============================
+           TOTAL UNREAD MESSAGE COUNT
+        ============================== */
+
+        const totalResponse = await fetch(
+            "/api/unread-counts/" +
+            encodeURIComponent(currentUserId)
+        );
+
+        const totalData =
+            await totalResponse.json();
+
+        if (
+            totalResponse.ok &&
+            totalData.success
+        ) {
+
+            const total =
+                Number(totalData.messages || 0);
+
+            if (total > 0) {
+
+                messageCount.style.display =
+                    "inline-flex";
+
+                messageCount.textContent =
+                    total > 99
+                        ? "99+"
+                        : total;
+
+            } else {
+
+                messageCount.style.display =
+                    "none";
+
+                messageCount.textContent =
+                    "";
+
+            }
+        }
+
+
+        /* ==============================
+           PER USER UNREAD COUNT
+        ============================== */
+
+        const userResponse = await fetch(
+            "/api/unread-messages/" +
+            encodeURIComponent(currentUserId)
+        );
+
+        const userData =
+            await userResponse.json();
+
+        if (
+            userResponse.ok &&
+            userData.success
+        ) {
+
+            unreadCounts =
+                userData.counts || {};
+
+            renderUsers(
+                getFilteredUsers()
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Unread count error:",
+            error
+        );
+
+    }
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function getFilteredUsers() {
+
+    const query =
+        String(
+            chatSearch.value || ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (!query) {
+
+        return allChatUsers;
+
+    }
+
+
+    return allChatUsers.filter(
+        function(user) {
+
+            return (
+
+                String(
+                    user.name || ""
+                )
+                    .toLowerCase()
+                    .includes(query)
+
+                ||
+
+                String(
+                    user.email || ""
+                )
+                    .toLowerCase()
+                    .includes(query)
+
+            );
+
+        }
+    );
+
+}
+
+
+chatSearch.addEventListener(
+    "input",
+    function() {
+
+        renderUsers(
+            getFilteredUsers()
+        );
+
+    }
+);
+
+
+/* =====================================================
+   OPEN CHAT
+===================================================== */
+
+async function openChat(userId) {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/users/" +
+                userId +
+                "?currentUserId=" +
+                currentUserId
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                "User profile load nahi ho pa rahi."
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================================
+           SELECT USER
+        ========================================== */
+
+        selectedUser =
+            data.user;
+
+
+        /* ==========================================
+           ENABLE MESSAGE BOX
+        ========================================== */
+
+        enableMessageBox();
+
+
+        /* ==========================================
+           CHAT NAME
+        ========================================== */
+
+        document.getElementById(
+            "chatName"
+        ).textContent =
+            selectedUser.name ||
+            "User";
+
+
+        /* ==========================================
+           STATUS
+        ========================================== */
+
+        document.getElementById(
+            "chatStatus"
+        ).textContent =
+            "ConnectHub user";
+
+
+        /* ==========================================
+           PROFILE PHOTO
+        ========================================== */
+
+        const avatar =
+            document.getElementById(
+                "chatAvatar"
+            );
+
+
+        if (
+            selectedUser.profilePhoto
+        ) {
+
+            avatar.innerHTML =
+                `<img
+                    src="${escapeHtml(
+                        selectedUser.profilePhoto
+                    )}"
+                    alt="Profile"
+                >`;
+
+        } else {
+
+            avatar.textContent =
+                "👤";
+
+        }
+
+
+        /* ==========================================
+           ACTIVE USER
+        ========================================== */
+
+        document
+            .querySelectorAll(
+                ".chat-user"
+            )
+            .forEach(
+                function(element) {
+
+                    element.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+        const selectedElement =
+            document.getElementById(
+                "chat-user-" +
+                userId
+            );
+
+
+        if (selectedElement) {
+
+            selectedElement.classList.add(
+                "active"
+            );
+
+        }
+
+
+        /* ==========================================
+           LOCAL UNREAD RESET
+        ========================================== */
+
+        unreadCounts[
+            Number(userId)
+        ] = 0;
+
+
+        renderUsers(
+            getFilteredUsers()
+        );
+
+
+        /* ==========================================
+           LOAD CHAT
+        ========================================== */
+
+        await loadMessages();
+
+
+        /* ==========================================
+           UPDATE BADGE
+        ========================================== */
+
+        await loadUnreadCounts();
+
+
+        /* ==========================================
+           FOCUS INPUT
+        ========================================== */
+
+        setTimeout(
+            function() {
+
+                messageInput.focus();
+
+            },
+            100
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Open chat error:",
+            error
+        );
+
+        alert(
+            "Server se connection nahi ho pa raha."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD MESSAGES
+===================================================== */
+
+async function loadMessages() {
+
+    if (!selectedUser) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/messages/" +
+                currentUserId +
+                "/" +
+                selectedUser.id
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            document.getElementById(
+                "messagesArea"
+            ).innerHTML =
+                '<p class="empty">Messages load nahi ho rahe.</p>';
+
+            return;
+
+        }
+
+
+        renderMessages(
+            data.messages || []
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Messages error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER MESSAGES
+===================================================== */
+
+function renderMessages(messages) {
+
+    const area =
+        document.getElementById(
+            "messagesArea"
+        );
+
+
+    if (!messages.length) {
+
+        area.innerHTML =
+            '<p class="empty">No messages yet. Say hello! 👋</p>';
+
+        return;
+
+    }
+
+
+    area.innerHTML =
+        messages.map(
+            function(message) {
+
+                const isMine =
+                    Number(
+                        message.senderId
+                    ) ===
+                    Number(
+                        currentUserId
+                    );
+
+
+                const time =
+                    new Date(
+                        message.createdAt
+                    ).toLocaleTimeString(
+                        [],
+                        {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+
+
+                return `
+
+                    <div
+                        class="message ${
+                            isMine
+                                ? "sent"
+                                : "received"
+                        }"
+                    >
+
+                        ${escapeHtml(
+                            message.text
+                        )}
+
+                        <span class="message-time">
+                            ${time}
+                        </span>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+
+    area.scrollTop =
+        area.scrollHeight;
+
+}
+
+
+/* =====================================================
+   SEND MESSAGE
+===================================================== */
+
+async function sendMessage() {
+
+    /* Prevent double click */
+
+    if (isSending) {
+        return;
+    }
+
+
+    /* No selected user */
+
+    if (!selectedUser) {
+
+        alert(
+            "Pehle kisi user ko select karo."
+        );
+
+        return;
+
+    }
+
+
+    const text =
+        messageInput.value.trim();
+
+
+    if (!text) {
+
+        messageInput.focus();
+
+        return;
+
+    }
+
+
+    isSending =
+        true;
+
+
+    sendButton.disabled =
+        true;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/messages",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        senderId:
+                            Number(
+                                currentUserId
+                            ),
+
+                        receiverId:
+                            Number(
+                                selectedUser.id
+                            ),
+
+                        text:
+                            text
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            alert(
+                data.message ||
+                "Message send nahi ho paaya."
+            );
+
+            return;
+
+        }
+
+
+        /* ==========================================
+           CLEAR INPUT
+        ========================================== */
+
+        messageInput.value =
+            "";
+
+
+        /* ==========================================
+           IMPORTANT:
+           INPUT KO ENABLE HI RAKHO
+        ========================================== */
+
+        enableMessageBox();
+
+
+        /* ==========================================
+           LOAD NEW MESSAGE
+        ========================================== */
+
+        await loadMessages();
+
+
+        /* ==========================================
+           UPDATE BADGE
+        ========================================== */
+
+        await loadUnreadCounts();
+
+
+    } catch (error) {
+
+        console.error(
+            "Send message error:",
+            error
+        );
+
+        alert(
+            "Server se connection nahi ho pa raha."
+        );
+
+    } finally {
+
+        isSending =
+            false;
+
+
+        /* NEVER HIDE INPUT */
+
+        enableMessageBox();
+
+
+        messageInput.focus();
+
+    }
+
+}
+
+
+/* =====================================================
+   ENTER TO SEND
+===================================================== */
+
+messageInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   REAL-TIME REFRESH
+===================================================== */
+
+setInterval(
+    async function() {
+
+        /*
+         * Chat open hai to messages refresh.
+         */
+
+        if (selectedUser) {
+
+            await loadMessages();
+
+        }
+
+
+        /*
+         * Unread badge.
+         */
+
+        await loadUnreadCounts();
+
+    },
+    2000
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+disableMessageBox();
+
+
+(async function() {
+
+    await loadUsers();
+
+    await loadUnreadCounts();
+
+})();
+
+    // Apply saved ConnectHub dark mode
+    if (localStorage.getItem("connectHubDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
+
+</script>
+
+
+</body>
+
+</html>
