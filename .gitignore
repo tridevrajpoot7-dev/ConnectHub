@@ -1,0 +1,9 @@
+﻿.env
+node_modules/
+*.zip
+.eve
+users.json
+posts.json
+messages.json
+notifications.json
+support.json
