@@ -6,7 +6,6 @@ dns.setServers(["1.1.1.1", "8.8.8.8"]);
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const { MongoClient } = require("mongodb");
-<<<<<<< HEAD
 const { Resend } = require("resend");
 
 const app = express();
@@ -21,10 +20,6 @@ const EMAIL_FROM =
     process.env.EMAIL_FROM ||
     "ConnectHub <onboarding@resend.dev>";
 
-=======
-
-const app = express();
->>>>>>> afa33aa938bd301a3144d538b6f47a96f52d989d
 const PORT = process.env.PORT || 3000;
 
 const MONGODB_URI = process.env.MONGODB_URI;
