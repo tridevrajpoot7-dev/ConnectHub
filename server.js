@@ -6,6 +6,7 @@ dns.setServers(["1.1.1.1", "8.8.8.8"]);
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const { MongoClient } = require("mongodb");
+<<<<<<< HEAD
 const { Resend } = require("resend");
 
 const app = express();
@@ -20,6 +21,10 @@ const EMAIL_FROM =
     process.env.EMAIL_FROM ||
     "ConnectHub <onboarding@resend.dev>";
 
+=======
+
+const app = express();
+>>>>>>> afa33aa938bd301a3144d538b6f47a96f52d989d
 const PORT = process.env.PORT || 3000;
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -146,7 +151,6 @@ function verifyToken(token) {
         return null;
     }
 }
-
 
 // Attaches req.auth = { userId, role } if a valid token is present.
 // Does NOT block the request by itself.
@@ -767,215 +771,6 @@ app.post("/api/login", async (req, res) => {
             success: false,
             message:
                 "Unable to login."
-        });
-    }
-});
-
-/* ==========================================
-   FORGOT PASSWORD
-========================================== */
-
-app.post("/api/forgot-password", async (req, res) => {
-    try {
-        const email = String(req.body?.email || "")
-            .trim()
-            .toLowerCase();
-
-        if (!email) {
-            return res.status(400).json({
-                success: false,
-                message: "Email is required."
-            });
-        }
-
-        const user = await findUserByEmail(email);
-
-        // Do not reveal whether email exists
-        if (!user) {
-            return res.json({
-                success: true,
-                message:
-                    "If an account exists with this email, a reset link has been sent."
-            });
-        }
-
-        const token =
-            createPasswordResetToken(user.id);
-
-        const resetLink =
-            `${APP_URL}/reset-password.html?token=${encodeURIComponent(token)}`;
-
-        const { data, error } =
-            await resend.emails.send({
-                from: EMAIL_FROM,
-                to: [user.email],
-                subject: "Reset your ConnectHub password",
-                html: `
-                    <div style="
-                        font-family: Arial, sans-serif;
-                        max-width: 600px;
-                        margin: auto;
-                        padding: 30px;
-                        border: 1px solid #ddd;
-                        border-radius: 12px;
-                    ">
-                        <h2>ConnectHub Password Reset</h2>
-
-                        <p>Hello ${String(user.name || "there")
-                            .replace(/[<>&"]/g, "")},</p>
-
-                        <p>
-                            We received a request to reset your
-                            ConnectHub password.
-                        </p>
-
-                        <p>
-                            This link will expire in
-                            <strong>15 minutes</strong>.
-                        </p>
-
-                        <p>
-                            <a
-                                href="${resetLink}"
-                                style="
-                                    display:inline-block;
-                                    padding:12px 20px;
-                                    background:#1877f2;
-                                    color:white;
-                                    text-decoration:none;
-                                    border-radius:8px;
-                                "
-                            >
-                                Reset Password
-                            </a>
-                        </p>
-
-                        <p>
-                            If you did not request this,
-                            you can safely ignore this email.
-                        </p>
-
-                        <p>
-                            — ConnectHub Team
-                        </p>
-                    </div>
-                `
-            });
-
-        if (error) {
-            console.error(
-                "Resend email error:",
-                error
-            );
-
-            return res.status(500).json({
-                success: false,
-                message:
-                    "Unable to send password reset email."
-            });
-        }
-
-        console.log(
-            "📧 Password reset email sent:",
-            data?.id
-        );
-
-        res.json({
-            success: true,
-            message:
-                "If an account exists with this email, a reset link has been sent."
-        });
-
-    } catch (error) {
-        console.error(
-            "Forgot password error:",
-            error
-        );
-
-        res.status(500).json({
-            success: false,
-            message:
-                "Unable to process password reset request."
-        });
-    }
-});
-
-/* ==========================================
-   RESET PASSWORD
-========================================== */
-
-app.post("/api/reset-password", async (req, res) => {
-    try {
-        const token = String(
-            req.body?.token || ""
-        );
-
-        const newPassword = String(
-            req.body?.newPassword || ""
-        );
-
-        if (!token || !newPassword) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Reset token and new password are required."
-            });
-        }
-
-        if (newPassword.length < 6) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Password must be at least 6 characters."
-            });
-        }
-
-        const decoded =
-            verifyPasswordResetToken(token);
-
-        if (!decoded) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Reset link is invalid or expired."
-            });
-        }
-
-        const user =
-            await findUserById(decoded.userId);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message:
-                    "User not found."
-            });
-        }
-
-        user.password =
-            await bcrypt.hash(
-                newPassword,
-                12
-            );
-
-        await saveUser(user);
-
-        res.json({
-            success: true,
-            message:
-                "Password reset successfully. You can now login."
-        });
-
-    } catch (error) {
-        console.error(
-            "Reset password error:",
-            error
-        );
-
-        res.status(500).json({
-            success: false,
-            message:
-                "Unable to reset password."
         });
     }
 });
